@@ -232,7 +232,7 @@
     if (authenticate(user, pass)) {
       currentUser = user;
       document.getElementById('loginStatus').innerHTML = `<i class="fas fa-check-circle"></i> Logged in: ${user}`;
-      alert(`Selamat datang, ${user}!`);
+      alert(`Assalamu'alaikum Ustadz ${user}!`);
       if (user === 'Agus Sarkawi') {
         document.getElementById('adminPanel').style.display = 'block';
         renderChart();
