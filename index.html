@@ -3,328 +3,182 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-  <title>Pencatatan Keterlambatan Santri & Wali Kelas</title>
+  <title>Aplikasi Pencatatan Keterlambatan Pembiasaan Pagi SMP islam terpadu putra abu Hurairah mataram</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+  
+  <!-- CDNs for Export & Charts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f4f7fc;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-    }
-    .app-container {
-      max-width: 1350px;
-      width: 100%;
-      background: white;
-      border-radius: 32px;
-      padding: 28px 30px;
-      box-shadow: 0 20px 40px rgba(0,20,50,0.08);
-      height: fit-content;
-    }
-    h1 {
-      font-size: 26px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #0b2b4a;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
+    body { font-family: 'Inter', sans-serif; background: #f4f7fc; padding: 20px; color:#1a3a5c; }
+    .app-container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 24px; padding: 30px; box-shadow: 0 10px 30px rgba(0,20,50,0.05); }
+    h1 { font-size: 22px; color: #0b2b4a; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;}
     h1 i { color: #2a7de1; }
-    .login-box {
-      background: #eef3fa;
-      border-radius: 30px;
-      padding: 15px 24px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px 18px;
-      margin-bottom: 25px;
-    }
-    .login-box label { font-weight: 500; color: #1a3a5c; }
-    .login-box input, .login-box select {
-      border: none;
-      background: white;
-      padding: 8px 16px;
-      border-radius: 40px;
-      font-size: 14px;
-      min-width: 180px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-      outline: none;
-    }
-    .login-box button {
-      background: #1f4e8c;
-      border: none;
-      color: white;
-      padding: 8px 24px;
-      border-radius: 40px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .login-box button:hover { background: #133b66; }
-    .login-status {
-      margin-left: auto;
-      font-size: 14px;
-      color: #1e6b3b;
-      background: #d9f0e3;
-      padding: 4px 18px;
-      border-radius: 40px;
-    }
-    .network-status {
-      font-size: 13px;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
+    
+    /* Toolbar & Login */
+    .toolbar-top { background: #eef3fa; padding: 15px 20px; border-radius: 20px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-bottom: 20px; justify-content: space-between; }
+    .login-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .login-group select, .login-group input { padding: 8px 15px; border-radius: 30px; border: 1px solid #d0ddee; outline: none; }
+    .btn-login { background: #1f4e8c; color: white; padding: 8px 20px; border-radius: 30px; border: none; cursor: pointer; font-weight: 500; transition: 0.2s;}
+    .btn-login:hover { background: #133b66; }
+    .network-status { font-size: 13px; padding: 5px 12px; border-radius: 20px; font-weight: 500; }
     .net-online { background: #d9f0e3; color: #1e6b3b; }
     .net-offline { background: #fae3d9; color: #a94442; }
 
-    .form-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      background: #f9fcff;
-      padding: 20px;
-      border-radius: 24px;
-      margin: 20px 0;
-      border: 1px solid #e4ecf5;
-    }
-    @media (max-width: 900px) {
-      .form-section { grid-template-columns: 1fr; }
-    }
-    .card-box {
-      background: white;
-      padding: 18px;
-      border-radius: 18px;
-      border: 1px solid #d0ddee;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .card-box h3 {
-      font-size: 16px;
-      color: #1b3b5c;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      position: relative;
-    }
-    .input-group label {
-      font-size: 13px;
-      font-weight: 500;
-      color: #335577;
-    }
-    .input-group input, .input-group select {
-      padding: 10px 14px;
-      border-radius: 30px;
-      border: 1px solid #d0ddee;
-      font-size: 14px;
-      outline: none;
-      background: #fff;
-    }
-    .suggestion-list {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      max-height: 180px;
-      overflow-y: auto;
-      position: absolute;
-      width: 100%;
-      top: 100%;
-      z-index: 10;
-      margin-top: 4px;
-      border: 1px solid #e0eaf5;
-      display: none;
-    }
-    .suggestion-item {
-      padding: 10px 16px;
-      cursor: pointer;
-      font-size: 13px;
-      border-bottom: 1px solid #f0f4fa;
-    }
+    /* Forms */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-card { background: #f9fcff; border: 1px solid #e4ecf5; padding: 20px; border-radius: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .form-card h3 { font-size: 16px; margin-bottom: 10px; }
+    .input-field { width: 100%; padding: 10px 15px; border-radius: 12px; border: 1px solid #d0ddee; font-size: 14px; }
+    .suggestion-list { background: white; border-radius: 12px; max-height: 150px; overflow-y: auto; position: absolute; width: calc(100% - 40px); z-index: 10; border: 1px solid #e0eaf5; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .suggestion-item { padding: 10px 15px; cursor: pointer; font-size: 13px; border-bottom: 1px solid #f0f4fa; }
     .suggestion-item:hover { background: #eaf1fb; }
-    .btn-primary {
-      background: #1f4e8c;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 40px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: 0.2s;
-    }
-    .btn-primary:hover { background: #133b66; }
-    .toolbar-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 15px 0;
-    }
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 20px;
-      border: 1px solid #e4ecf5;
-      margin: 15px 0;
-      background: white;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-    th {
-      background: #f2f8ff;
-      color: #1b3b5c;
-      padding: 14px 12px;
-      text-align: left;
-      border-bottom: 2px solid #d7e3f0;
-    }
-    td {
-      padding: 12px;
-      border-bottom: 1px solid #e9eff6;
-    }
-    .badge {
-      background: #dce8f8;
-      color: #1f4e8c;
-      padding: 3px 12px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-    .badge-wali {
-      background: #fae3d9;
-      color: #8c2a1f;
-      padding: 3px 12px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-    .stat {
-      font-size: 14px;
-      color: #1d3d61;
-      background: #eaf2fc;
-      padding: 4px 18px;
-      border-radius: 30px;
-    }
+    .btn-submit { background: #1f4e8c; color: white; padding: 10px; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; width: 100%; margin-top: auto;}
+    .btn-submit.danger { background: #c9302c; }
+
+    /* Dashboard Summary & Buttons */
+    .dashboard-summary { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+    .summary-card { background: #fff; border: 1px solid #d0ddee; padding: 15px 25px; border-radius: 16px; flex: 1; min-width: 200px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+    .summary-card h2 { font-size: 28px; color: #1f4e8c; margin: 5px 0; }
+    
+    .action-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: #f4f7fc; padding: 10px; border-radius: 16px;}
+    .btn-action { background: white; border: 1px solid #d0ddee; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; color: #1a3a5c; transition: 0.2s;}
+    .btn-action:hover { background: #eef3fa; }
+    .btn-action.active { background: #1f4e8c; color: white; border-color: #1f4e8c; }
+    .btn-export { background: #1e8c4a; color: white; border: none; }
+    .btn-export:hover { background: #156936; }
+
+    /* Tables */
+    .table-container { overflow-x: auto; display: none; background: white; border-radius: 16px; border: 1px solid #e4ecf5; margin-bottom: 20px;}
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background: #f2f8ff; padding: 12px; text-align: left; border-bottom: 2px solid #d7e3f0; color: #1b3b5c; }
+    td { padding: 12px; border-bottom: 1px solid #e9eff6; }
+
+    /* Admin Panel */
+    .admin-panel { background: #fff3cd; border: 1px solid #ffe69c; padding: 20px; border-radius: 20px; margin-bottom: 20px; display: none; }
+    .admin-panel h3 { color: #856404; margin-bottom: 15px; }
+    .admin-controls { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; margin-bottom: 20px;}
+    .chart-container { background: white; padding: 15px; border-radius: 16px; border: 1px solid #ffe69c; height: 300px;}
   </style>
 </head>
 <body>
-<div class="app-container" id="app">
-  <h1>
-    <i class="fas fa-clock"></i> Pencatatan Keterlambatan Santri & Wali Kelas
-    <span id="netBadge" class="network-status net-online" style="margin-left:auto;"><i class="fas fa-wifi"></i> Online</span>
-  </h1>
 
-  <!-- LOGIN -->
-  <div class="login-box" id="loginArea">
-    <label><i class="fas fa-user"></i> User</label>
-    <select id="usernameSelect">
-      <option value="">-- Pilih User --</option>
-      <option value="Agus Sarkawi">Agus Sarkawi</option>
-      <option value="Ali Sulistiono">Ali Sulistiono</option>
-      <option value="Arsyad">Arsyad</option>
-      <option value="Adi Hardiyansyah">Adi Hardiyansyah</option>
-      <option value="Jumadil">Jumadil</option>
-      <option value="Junaidi">Junaidi</option>
-      <option value="Budiman">Budiman</option>
-    </select>
-    <label><i class="fas fa-lock"></i> Password</label>
-    <input type="password" id="passwordInput" placeholder="password...">
-    <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
-    <span class="login-status" id="loginStatus"><i class="fas fa-circle" style="color:#b0c6dd;font-size:10px;"></i> Belum login</span>
+<div class="app-container">
+  <h1><i class="fas fa-clock"></i> Aplikasi Pencatatan Keterlambatan Pembiasaan Pagi SMP islam terpadu putra abu Hurairah mataram</h1>
+
+  <div class="toolbar-top">
+    <div class="login-group">
+      <select id="usernameSelect">
+        <option value="">-- Pilih User --</option>
+        <option value="Agus Sarkawi">Agus Sarkawi (Admin)</option>
+        <option value="Ali Sulistiono">Ali Sulistiono</option>
+        <option value="Arsyad">Arsyad</option>
+        <option value="Adi Hardiyansyah">Adi Hardiyansyah</option>
+      </select>
+      <input type="password" id="passwordInput" placeholder="Password...">
+      <button class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <span id="loginStatus" style="font-size: 13px; color: #1e8c4a; margin-left: 10px;"></span>
+    </div>
+    <div>
+      <span id="netBadge" class="network-status net-online"><i class="fas fa-wifi"></i> Online</span>
+    </div>
   </div>
 
-  <!-- FORM INPUT -->
-  <div class="form-section">
-    <!-- Card 1: Santri -->
-    <div class="card-box">
-      <h3><i class="fas fa-user-graduate" style="color:#2a7de1;"></i> Form Santri Terlambat</h3>
-      <div class="input-group">
-        <label>Cari & Pilih Nama Santri</label>
-        <input type="text" id="searchSantriInput" placeholder="Ketik nama santri..." autocomplete="off">
-        <div id="suggestionBox" class="suggestion-list"></div>
-      </div>
-      <button class="btn-primary" id="addSantriDelayBtn" style="margin-top:auto;"><i class="fas fa-check"></i> Catat Santri Telat</button>
+  <div class="form-grid">
+    <div class="form-card" style="position: relative;">
+      <h3><i class="fas fa-user-graduate" style="color:#2a7de1;"></i> Input Santri Telat</h3>
+      <input type="text" id="searchSantriInput" class="input-field" placeholder="Ketik nama santri..." autocomplete="off">
+      <div id="suggestionBox" class="suggestion-list"></div>
+      <button class="btn-submit" id="addSantriBtn"><i class="fas fa-paper-plane"></i> Simpan Santri</button>
     </div>
+    <div class="form-card">
+      <h3><i class="fas fa-chalkboard-teacher" style="color:#d9534f;"></i> Input Wali Kelas Telat</h3>
+      <select id="waliKelasSelect" class="input-field">
+        <option value="-">-- Pilih Wali Kelas --</option>
+        <option value="Hairul Umam Insani, S. Pd. (7a)">Hairul Umam Insani, S. Pd. (7a)</option>
+        <option value="Hafiz Bagis, Lc. (7b)">Hafiz Bagis, Lc. (7b)</option>
+        <option value="Salman, S. Pd. I. (7c)">Salman, S. Pd. I. (7c)</option>
+        <option value="Haqikahurrahman, S. Pd. (7d)">Haqikahurrahman, S. Pd. (7d)</option>
+        <option value="Zulkarnaen Teguh Wibowo, S. Pd. I. (7e)">Zulkarnaen Teguh Wibowo, S. Pd. I. (7e)</option>
+        <option value="Firman, S. Pd. (8a)">Firman, S. Pd. (8a)</option>
+        <option value="Syahrul Hasyim, Lc. (8b)">Syahrul Hasyim, Lc. (8b)</option>
+        <option value="Adiandri Suhaili, M. Pd. (8c)">Adiandri Suhaili, M. Pd. (8c)</option>
+        <option value="M. Tahir, M. Pd. (8d)">M. Tahir, M. Pd. (8d)</option>
+        <option value="Ahmad Mahsan Haikal, Lc. (8e)">Ahmad Mahsan Haikal, Lc. (8e)</option>
+        <option value="Saifuddin Hidayat, S. Pd. (9a)">Saifuddin Hidayat, S. Pd. (9a)</option>
+        <option value="Syamsul Bahri, Lc. (9b)">Syamsul Bahri, Lc. (9b)</option>
+        <option value="Ludfi Rusdiyono, S. Pd. (9c)">Ludfi Rusdiyono, S. Pd. (9c)</option>
+        <option value="Ahmad Arroiyan, Lc. (9d)">Ahmad Arroiyan, Lc. (9d)</option>
+      </select>
+      <button class="btn-submit danger" id="addWaliBtn"><i class="fas fa-paper-plane"></i> Simpan Wali Kelas</button>
+    </div>
+  </div>
 
-    <!-- Card 2: Wali Kelas -->
-    <div class="card-box">
-      <h3><i class="fas fa-chalkboard-teacher" style="color:#d9534f;"></i> Form Wali Kelas Terlambat</h3>
-      <div class="input-group">
-        <label>Pilih Wali Kelas Terlambat</label>
-        <select id="waliKelasSelect">
-          <option value="-">-- Pilih Wali Kelas --</option>
-          <option value="Hairul Umam Insani, S. Pd. (7a)">Hairul Umam Insani, S. Pd. (7a)</option>
-          <option value="Hafiz Bagis, Lc. (7b)">Hafiz Bagis, Lc. (7b)</option>
-          <option value="Salman, S. Pd. I. (7c)">Salman, S. Pd. I. (7c)</option>
-          <option value="Haqikahurrahman, S. Pd. (7d)">Haqikahurrahman, S. Pd. (7d)</option>
-          <option value="Zulkarnaen Teguh Wibowo, S. Pd. I. (7e)">Zulkarnaen Teguh Wibowo, S. Pd. I. (7e)</option>
-          <option value="Firman, S. Pd. (8a)">Firman, S. Pd. (8a)</option>
-          <option value="Syahrul Hasyim, Lc. (8b)">Syahrul Hasyim, Lc. (8b)</option>
-          <option value="Adiandri Suhaili, M. Pd. (8c)">Adiandri Suhaili, M. Pd. (8c)</option>
-          <option value="M. Tahir, M. Pd. (8d)">M. Tahir, M. Pd. (8d)</option>
-          <option value="Ahmad Mahsan Haikal, Lc. (8e)">Ahmad Mahsan Haikal, Lc. (8e)</option>
-          <option value="Saifuddin Hidayat, S. Pd. (9a)">Saifuddin Hidayat, S. Pd. (9a)</option>
-          <option value="Syamsul Bahri, Lc. (9b)">Syamsul Bahri, Lc. (9b)</option>
-          <option value="Ludfi Rusdiyono, S. Pd. (9c)">Ludfi Rusdiyono, S. Pd. (9c)</option>
-          <option value="Ahmad Arroiyan, Lc. (9d)">Ahmad Arroiyan, Lc. (9d)</option>
+  <!-- Dashboard Overview -->
+  <div class="dashboard-summary">
+    <div class="summary-card">
+      <p>Total Santri Telat</p>
+      <h2 id="countSantri">0</h2>
+    </div>
+    <div class="summary-card">
+      <p>Total Wali Kelas Telat</p>
+      <h2 id="countWali">0</h2>
+    </div>
+  </div>
+
+  <!-- Admin Panel Khusus -->
+  <div class="admin-panel" id="adminPanel">
+    <h3><i class="fas fa-user-shield"></i> Ruang Khusus Admin</h3>
+    <div class="admin-controls">
+      <label>Batas Sering Telat (n): <input type="number" id="nBatas" value="3" class="input-field" style="width: 70px; display: inline-block; padding: 5px;"></label>
+      <button class="btn-action btn-export" style="background:#dc3545;" onclick="exportPDFAdmin()"><i class="fas fa-file-pdf"></i> Download PDF Laporan Khusus</button>
+      
+      <div style="margin-left: auto;">
+        <label>Filter Grafik: </label>
+        <select id="chartFilter" class="input-field" style="width: auto; display: inline-block; padding: 5px;" onchange="renderChart()">
+          <option value="hari">Per Hari</option>
+          <option value="pekan">Per Pekan</option>
+          <option value="bulan">Per Bulan</option>
         </select>
       </div>
-      <button class="btn-primary" id="addWaliDelayBtn" style="margin-top:auto; background:#c9302c;"><i class="fas fa-check"></i> Catat Wali Kelas Telat</button>
+    </div>
+    <div class="chart-container">
+      <canvas id="tardyChart"></canvas>
     </div>
   </div>
 
-  <div class="toolbar-actions">
-    <span class="stat"><i class="fas fa-users"></i> Total tercatat: <span id="totalCount">0</span></span>
-    <div style="display:flex; gap:10px;">
-      <button class="btn-primary" id="exportXLSBtn" style="background:#1f8c5a;"><i class="fas fa-file-excel"></i> Download XLS</button>
-      <button class="btn-primary" id="refreshBtn" style="background:#527a9e;"><i class="fas fa-sync"></i> Refresh Data</button>
-    </div>
+  <div class="action-bar">
+    <button class="btn-action" id="btnShowSantri" onclick="toggleTable('santri')"><i class="fas fa-eye"></i> Tampilkan Tabel Santri</button>
+    <button class="btn-action" id="btnShowWali" onclick="toggleTable('wali')"><i class="fas fa-eye"></i> Tampilkan Tabel Wali Kelas</button>
+    <button class="btn-action btn-export" onclick="exportXLSSantri()"><i class="fas fa-file-excel"></i> Rekap XLS Santri</button>
+    <button class="btn-action btn-export" onclick="exportXLSWali()"><i class="fas fa-file-excel"></i> Rekap XLS Wali Kelas</button>
+    <button class="btn-action" onclick="loadRecords()" style="margin-left: auto;"><i class="fas fa-sync"></i> Refresh Sistem</button>
   </div>
 
-  <!-- TABLE -->
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Kategori</th>
-          <th>Nama (Santri / Wali Kelas)</th>
-          <th>Kelas</th>
-          <th>Tanggal & Waktu</th>
-          <th>Pencatat</th>
-          <th>Status (Frekuensi)</th>
-        </tr>
-      </thead>
-      <tbody id="recordsBody"></tbody>
+  <!-- Tables Wrapper -->
+  <div class="table-container" id="wrapSantri">
+    <table id="tableSantri">
+      <thead><tr><th>Nama Santri</th><th>Kelas</th><th>Waktu</th><th>Pencatat</th><th>Frekuensi</th></tr></thead>
+      <tbody id="bodySantri"></tbody>
+    </table>
+  </div>
+
+  <div class="table-container" id="wrapWali">
+    <table id="tableWali">
+      <thead><tr><th>Nama Wali Kelas</th><th>Kelas</th><th>Waktu</th><th>Pencatat</th><th>Frekuensi</th></tr></thead>
+      <tbody id="bodyWali"></tbody>
     </table>
   </div>
 </div>
 
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzVE-WX0-JIKYl3jZpJUuutE5UwoCH4Gcx5NP4iaxe-eGykIuCyuFP76z40lnBHHq66/exec'; // Ganti dengan URL deployment Web App GAS Anda
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyELoapc56X_qs6QqJ7RidPwK03KwvRKwNdigq93UP_e5ph0o6eK2kmTl-SETT2esb5/exec';
 
   const SANTRI_LIST = [
     "ABDULLAH RASYIQUL AKRAM (7A)", "ABDUROHMAN KHOLIL (7A)", "ABDURROZZAQ (7A)", "ADRIAN FACHRY AS'ARY (7A)", "ALBY FACHRIE (7A)", "ALIF ZIYAD ZAEN (7A)", "ATHAR RIZKY YUDHISTIRA (7A)", "AUFA AL HAMIDI (7A)", "BINTANG JULIANT ALFARABI (7A)", "FADHIL NASHIR ALBANI (7A)", "FAIZ ARFAN HAIKAL (7A)", "FAYADH ELFATA (7A)", "HADZUKI ADITYA RAMADHAN (7A)", "HAFIDS AL GHAZALI (7A)", "HARITS ARKAAN (7A)", "HUSAIN ANAKI (7A)", "LALU IQRA ILYAS (7A)", "M. GHAISAN INDIKA HILMY (7A)", "MU'ADZ (7A)", "MUH. GHAFAR ARIEF SETIOBUDI (7A)", "MUHAMMAD ADIB (7A)", "MUHAMMAD AL FAIZ (7A)", "MUHAMMAD ALFIAN RIZQI (7A)", "MUHAMMAD AQIL (7A)", "MUHAMMAD AQIL ALMAIR RAMADHAN (7A)", "MUHAMMAD NAYAKA HAKAM (7A)", "MUHAMMAD TRISTAN ALIEF PRABOWO (7A)", "MUHAMMAD ZAKY AL HAFIZH FAUZAN (7A)", "NADYANDA MUCHALI AL MAJIID (7A)", "RESKI ARSY NEGARA (7A)", "SULTAN FAIZULLAH ATMIJOYO (7A)", "SYABANIN ALKAUTSAR IRAWAN (7A)", "SYAFIIQ AL-ATSARI (7A)", "UKASYAH ABDURROHMAN (7A)", "UWAIS (7A)", "YUSUF ABDURRAHMAN FANSURI (7A)",
@@ -345,251 +199,300 @@
 
   let currentUser = null;
   let records = [];
+  let chartInstance = null;
 
-  const usernameSelect = document.getElementById('usernameSelect');
-  const passwordInput = document.getElementById('passwordInput');
-  const loginBtn = document.getElementById('loginBtn');
-  const loginStatus = document.getElementById('loginStatus');
-  const netBadge = document.getElementById('netBadge');
-  
+  // Elemen DOM
   const searchInput = document.getElementById('searchSantriInput');
   const suggestionBox = document.getElementById('suggestionBox');
-  const addSantriDelayBtn = document.getElementById('addSantriDelayBtn');
-  
-  const waliKelasSelect = document.getElementById('waliKelasSelect');
-  const addWaliDelayBtn = document.getElementById('addWaliDelayBtn');
-  
-  const recordsBody = document.getElementById('recordsBody');
-  const totalCount = document.getElementById('totalCount');
-  const exportBtn = document.getElementById('exportXLSBtn');
-  const refreshBtn = document.getElementById('refreshBtn');
+  const countSantri = document.getElementById('countSantri');
+  const countWali = document.getElementById('countWali');
 
   function authenticate(username, password) {
     if (!username) return false;
     const days = ['ahad', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
     const todayName = days[new Date().getDay()]; 
-    const dynamicPass = todayName + '212';
-    return password.toLowerCase() === dynamicPass.toLowerCase();
+    if (username === 'Agus Sarkawi') {
+      return password.toLowerCase() === ('bismillah' + todayName).toLowerCase();
+    }
+    return password.toLowerCase() === (todayName + '212').toLowerCase();
   }
 
-  function parseSantri(full) {
-    const match = full.match(/^(.*?)\s*\(([^)]+)\)$/);
-    if (match) {
-      return { nama: match[1].trim(), kelas: match[2].trim() };
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const user = document.getElementById('usernameSelect').value;
+    const pass = document.getElementById('passwordInput').value.trim();
+    if (!user) { alert('Silakan pilih nama user terlebih dahulu!'); return; }
+    
+    if (authenticate(user, pass)) {
+      currentUser = user;
+      document.getElementById('loginStatus').innerHTML = `<i class="fas fa-check-circle"></i> Logged in: ${user}`;
+      alert(`Selamat datang, ${user}!`);
+      if (user === 'Agus Sarkawi') {
+        document.getElementById('adminPanel').style.display = 'block';
+        renderChart();
+      } else {
+        document.getElementById('adminPanel').style.display = 'none';
+      }
+    } else {
+      alert('Password salah.');
     }
-    return { nama: full.trim(), kelas: '-' };
+  });
+
+  // Logika Jaringan
+  function updateNetworkStatus(isOnline) {
+    const netBadge = document.getElementById('netBadge');
+    if (isOnline) {
+      netBadge.className = 'network-status net-online';
+      netBadge.innerHTML = '<i class="fas fa-wifi"></i> Online';
+    } else {
+      netBadge.className = 'network-status net-offline';
+      netBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Offline';
+    }
   }
+
+  window.addEventListener('online', () => { updateNetworkStatus(true); processPendingQueue(); });
+  window.addEventListener('offline', () => updateNetworkStatus(false));
 
   async function loadRecords() {
     if (!navigator.onLine) {
       updateNetworkStatus(false);
-      loadFromLocalStorage();
+      records = JSON.parse(localStorage.getItem('cached_records') || '[]');
+      updateDash();
       return;
     }
-
     try {
       const response = await fetch(`${API_URL}?action=get`);
       const result = await response.json();
       if (result.success && Array.isArray(result.data)) {
         records = result.data;
         localStorage.setItem('cached_records', JSON.stringify(records));
-        updateTable();
+        updateDash();
         updateNetworkStatus(true);
-        processPendingQueue();
+        if (currentUser === 'Agus Sarkawi') renderChart();
       }
     } catch (e) {
       updateNetworkStatus(false);
-      loadFromLocalStorage();
-    }
-  }
-
-  function loadFromLocalStorage() {
-    const cached = localStorage.getItem('cached_records');
-    if (cached) {
-      records = JSON.parse(cached);
-      updateTable();
-    }
-  }
-
-  function updateNetworkStatus(isOnline) {
-    if (isOnline) {
-      netBadge.className = 'network-status net-online';
-      netBadge.innerHTML = '<i class="fas fa-wifi"></i> Online';
-    } else {
-      netBadge.className = 'network-status net-offline';
-      netBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Offline (Mode Lokal)';
+      records = JSON.parse(localStorage.getItem('cached_records') || '[]');
+      updateDash();
     }
   }
 
   async function processPendingQueue() {
     let queue = JSON.parse(localStorage.getItem('pending_queue') || '[]');
     if (queue.length === 0) return;
-
-    netBadge.innerHTML = '<i class="fas fa-sync fa-spin"></i> Mensinkronkan...';
-    
+    document.getElementById('netBadge').innerHTML = '<i class="fas fa-sync fa-spin"></i> Sinkronisasi...';
     for (let i = 0; i < queue.length; i++) {
       try {
-        await fetch(API_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(queue[i])
-        });
-      } catch (err) {
-        return;
-      }
+        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(queue[i]) });
+      } catch (err) {}
     }
-
     localStorage.removeItem('pending_queue');
     loadRecords();
   }
 
-  window.addEventListener('online', () => {
-    updateNetworkStatus(true);
-    processPendingQueue();
-  });
-  window.addEventListener('offline', () => updateNetworkStatus(false));
-
   async function sendData(payload) {
     if (navigator.onLine) {
       try {
-        await fetch(API_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        alert('Data berhasil dicatat & dikirim ke Server!');
-        setTimeout(loadRecords, 1500);
+        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        alert('Berhasil dicatat!');
+        setTimeout(loadRecords, 1000);
         return;
       } catch (e) {}
     }
-
     let queue = JSON.parse(localStorage.getItem('pending_queue') || '[]');
     queue.push(payload);
     localStorage.setItem('pending_queue', JSON.stringify(queue));
-    
-    alert('Anda sedang Offline. Data disimpan di memori browser dan akan otomatis tersinkron saat terhubung internet.');
+    alert('Mode Offline. Data otomatis dikirim saat jaringan kembali.');
     loadRecords();
   }
 
-  // Fungsi Mapping Tampilan Tabel yang Disempurnakan
-  function updateTable() {
-    recordsBody.innerHTML = '';
-    totalCount.textContent = records.length;
-    if (records.length === 0) {
-      recordsBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:#7a94b5;">Belum ada data tercatat</td></tr>`;
-      return;
+  // Dashboard Updates
+  function updateDash() {
+    const listSantri = records.filter(r => r.category === 'santri');
+    const listWali = records.filter(r => r.category === 'wali' || r['Nama Wali Kelas']);
+    countSantri.textContent = listSantri.length;
+    countWali.textContent = listWali.length;
+    
+    // Jangan build ulang tabel jika sedang tidak ditampilkan untuk menghemat load browser
+    if (document.getElementById('wrapSantri').style.display === 'block') renderTableSantri(listSantri);
+    if (document.getElementById('wrapWali').style.display === 'block') renderTableWali(listWali);
+  }
+
+  function toggleTable(type) {
+    const wSantri = document.getElementById('wrapSantri');
+    const wWali = document.getElementById('wrapWali');
+    const bSantri = document.getElementById('btnShowSantri');
+    const bWali = document.getElementById('btnShowWali');
+
+    if (type === 'santri') {
+      const isShowing = wSantri.style.display === 'block';
+      wSantri.style.display = isShowing ? 'none' : 'block';
+      bSantri.classList.toggle('active', !isShowing);
+      if (!isShowing) renderTableSantri(records.filter(r => r.category === 'santri'));
+    } else {
+      const isShowing = wWali.style.display === 'block';
+      wWali.style.display = isShowing ? 'none' : 'block';
+      bWali.classList.toggle('active', !isShowing);
+      if (!isShowing) renderTableWali(records.filter(r => r.category === 'wali' || r['Nama Wali Kelas']));
     }
+  }
 
-    records.slice().reverse().forEach((r) => {
-      const tr = document.createElement('tr');
-      
-      // Deteksi kategori berdasarkan properti data dari sheet masing-masing
-      const isWali = r.category === 'wali' || r['Nama Wali Kelas'] !== undefined;
-      
-      const catBadge = isWali ? '<span class="badge-wali">Wali Kelas</span>' : '<span class="badge">Santri</span>';
-      const nameText = isWali ? (r['Nama Wali Kelas'] || '-') : (r['Nama'] || '-');
-      const kelasText = r['Kelas'] || '-';
-      const timeText = `${r['Tanggal'] || ''} ${r['Waktu'] || ''}`;
-      const pencatat = r['Pencatat'] || r['Dicatat Oleh'] || 'system';
-      const statusCount = r['Status'] || '1';
-
-      tr.innerHTML = `
-        <td>${catBadge}</td>
-        <td><strong>${nameText}</strong></td>
-        <td>${kelasText}</td>
-        <td>${timeText}</td>
-        <td>${pencatat}</td>
-        <td><span style="font-weight:bold; color:#1f4e8c;">Telat ke-${statusCount}</span></td>
-      `;
-      recordsBody.appendChild(tr);
+  function renderTableSantri(data) {
+    const tbody = document.getElementById('bodySantri');
+    tbody.innerHTML = '';
+    data.slice().reverse().forEach(r => {
+      tbody.innerHTML += `<tr><td><strong>${r.Nama || '-'}</strong></td><td>${r.Kelas || '-'}</td><td>${r.Tanggal} ${r.Waktu}</td><td>${r.Pencatat || '-'}</td><td>Ke-${r.Status || 1}</td></tr>`;
     });
   }
 
-  function showSuggestions(query) {
-    if (!query.trim()) { suggestionBox.style.display = 'none'; return; }
-    const filtered = SANTRI_LIST.filter(s => s.toLowerCase().includes(query.toLowerCase()));
+  function renderTableWali(data) {
+    const tbody = document.getElementById('bodyWali');
+    tbody.innerHTML = '';
+    data.slice().reverse().forEach(r => {
+      tbody.innerHTML += `<tr><td><strong>${r['Nama Wali Kelas'] || '-'}</strong></td><td>${r.Kelas || '-'}</td><td>${r.Tanggal} ${r.Waktu}</td><td>${r.Pencatat || '-'}</td><td>Ke-${r.Status || 1}</td></tr>`;
+    });
+  }
+
+  // Input Data Santri & Wali
+  searchInput.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
     suggestionBox.innerHTML = '';
+    if (!q.trim()) { suggestionBox.style.display = 'none'; return; }
+    const filtered = SANTRI_LIST.filter(s => s.toLowerCase().includes(q));
     if (filtered.length === 0) { suggestionBox.style.display = 'none'; return; }
     filtered.forEach(item => {
       const div = document.createElement('div');
       div.className = 'suggestion-item';
       div.textContent = item;
-      div.addEventListener('click', () => {
-        searchInput.value = item;
-        suggestionBox.style.display = 'none';
-      });
+      div.onclick = () => { searchInput.value = item; suggestionBox.style.display = 'none'; };
       suggestionBox.appendChild(div);
     });
     suggestionBox.style.display = 'block';
-  }
+  });
 
-  async function addSantriDelay() {
-    if (!currentUser) { alert('Silakan login terlebih dahulu!'); return; }
+  document.getElementById('addSantriBtn').addEventListener('click', async () => {
+    if (!currentUser) return alert('Login dulu!');
     const raw = searchInput.value.trim();
-    if (!raw) { alert('Masukkan nama santri.'); return; }
-    
-    const { nama, kelas } = parseSantri(raw);
+    if (!raw) return alert('Pilih santri!');
+    const match = raw.match(/^(.*?)\s*\(([^)]+)\)$/);
     const payload = {
       action: 'add',
-      data: {
-        type: 'santri',
-        nama: nama,
-        kelas: kelas,
-        timestamp: new Date().toISOString(),
-        user: currentUser
-      }
+      data: { type: 'santri', nama: match ? match[1].trim() : raw, kelas: match ? match[2].trim() : '-', user: currentUser }
     };
-
     searchInput.value = '';
     await sendData(payload);
-  }
+  });
 
-  async function addWaliDelay() {
-    if (!currentUser) { alert('Silakan login terlebih dahulu!'); return; }
-    const waliKelas = waliKelasSelect.value;
-    if (waliKelas === '-') { alert('Pilih nama wali kelas terlebih dahulu.'); return; }
+  document.getElementById('addWaliBtn').addEventListener('click', async () => {
+    if (!currentUser) return alert('Login dulu!');
+    const val = document.getElementById('waliKelasSelect').value;
+    if (val === '-') return alert('Pilih wali kelas!');
+    await sendData({ action: 'add', data: { type: 'wali', waliKelas: val, user: currentUser } });
+    document.getElementById('waliKelasSelect').selectedIndex = 0;
+  });
 
-    const payload = {
-      action: 'add',
-      data: {
-        type: 'wali',
-        waliKelas: waliKelas,
-        timestamp: new Date().toISOString(),
-        user: currentUser
+  // Rekap Export (XLS) Cerdas
+  function getSummaryGrouped(category, keyName) {
+    const list = records.filter(r => r.category === category || r[keyName]);
+    let grouped = {};
+    list.forEach(r => {
+      const nama = r[keyName];
+      if(!grouped[nama]) {
+        grouped[nama] = { Nama: nama, Kelas: r.Kelas, "Total Telat": 1, Tanda: "" };
+      } else {
+        grouped[nama]["Total Telat"] = Math.max(grouped[nama]["Total Telat"], parseInt(r.Status || 1));
       }
-    };
-
-    waliKelasSelect.selectedIndex = 0;
-    await sendData(payload);
+    });
+    return Object.values(grouped).map(item => {
+      if(item["Total Telat"] >= 3) item.Tanda = "⚠ Sering Sekali Telat";
+      return item;
+    }).sort((a,b) => a.Kelas.localeCompare(b.Kelas) || a.Nama.localeCompare(b.Nama));
   }
 
-  loginBtn.addEventListener('click', () => {
-    const user = usernameSelect.value;
-    const pass = passwordInput.value.trim();
-    if (!user) { alert('Silakan pilih nama user terlebih dahulu!'); return; }
-    if (authenticate(user, pass)) {
-      currentUser = user;
-      loginStatus.innerHTML = `<i class="fas fa-check-circle" style="color:#1e8c4a;"></i> Login: ${user}`;
-      alert(`Selamat datang, ${user}!`);
-    } else {
-      alert('Password salah.');
-    }
-  });
-
-  searchInput.addEventListener('input', (e) => showSuggestions(e.target.value));
-  addSantriDelayBtn.addEventListener('click', addSantriDelay);
-  addWaliDelayBtn.addEventListener('click', addWaliDelay);
-  refreshBtn.addEventListener('click', loadRecords);
-
-  exportBtn.addEventListener('click', () => {
-    if (records.length === 0) { alert('Tidak ada data.'); return; }
+  function exportXLSSantri() {
+    const data = getSummaryGrouped('santri', 'Nama');
+    if(!data.length) return alert('Tidak ada data');
+    const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(records);
-    XLSX.utils.book_append_sheet(wb, ws, 'Rekapitulasi');
-    XLSX.writeFile(wb, `rekap_keterlambatan.xlsx`);
-  });
+    XLSX.utils.book_append_sheet(wb, ws, 'Rekap_Santri');
+    XLSX.writeFile(wb, `Rekap_Telat_Santri_${new Date().getTime()}.xlsx`);
+  }
+
+  function exportXLSWali() {
+    const data = getSummaryGrouped('wali', 'Nama Wali Kelas');
+    if(!data.length) return alert('Tidak ada data');
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Rekap_Wali_Kelas');
+    XLSX.writeFile(wb, `Rekap_Telat_Wali_${new Date().getTime()}.xlsx`);
+  }
+
+  // Admin PDF
+  function exportPDFAdmin() {
+    const n = parseInt(document.getElementById('nBatas').value) || 3;
+    const data = getSummaryGrouped('santri', 'Nama').filter(x => x["Total Telat"] > n);
+    
+    if(data.length === 0) return alert('Tidak ada santri yang melebihi batas n tersebut.');
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.text(`Laporan Khusus Santri Bermasalah (Telat > ${n} kali)`, 14, 20);
+    
+    const tableData = data.map((item, index) => [index+1, item.Nama, item.Kelas, item["Total Telat"]]);
+    doc.autoTable({
+      startY: 30,
+      head: [['No', 'Nama Santri', 'Kelas', 'Total Telat']],
+      body: tableData,
+    });
+    doc.save(`Laporan_Admin_Sarkawi.pdf`);
+  }
+
+  // Admin Chart (Kurva Keterlambatan Santri)
+  function renderChart() {
+    if (currentUser !== 'Agus Sarkawi') return;
+    const ctx = document.getElementById('tardyChart').getContext('2d');
+    const filter = document.getElementById('chartFilter').value;
+    
+    const santriRecords = records.filter(r => r.category === 'santri');
+    let grouped = {};
+    
+    // Grouping Logika (Sederhana by Date untuk contoh)
+    santriRecords.forEach(r => {
+      let key = r.Tanggal; // Default per hari (DD/MM/YYYY)
+      if (filter === 'bulan') {
+        const parts = r.Tanggal.split('/');
+        if (parts.length === 3) key = `${parts[1]}/${parts[2]}`;
+      } 
+      // Tambahkan logic extract pekan jika perlu
+      if (!grouped[key]) grouped[key] = 0;
+      grouped[key]++;
+    });
+
+    const labels = Object.keys(grouped).sort();
+    const totalPopulasi = SANTRI_LIST.length; 
+    const dataSet = labels.map(l => (grouped[l] / totalPopulasi) * 100);
+
+    if (chartInstance) chartInstance.destroy();
+    
+    chartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Prosentase Santri Telat (%)',
+          data: dataSet,
+          borderColor: '#dc3545',
+          backgroundColor: 'rgba(220, 53, 69, 0.1)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true, suggestedMax: 10 } }
+      }
+    });
+  }
 
   loadRecords();
 </script>
