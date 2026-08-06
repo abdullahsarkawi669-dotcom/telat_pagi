@@ -121,6 +121,7 @@
         <option value="Arsyad">Arsyad</option>
         <option value="Adi Hardiyansyah">Adi Hardiyansyah</option>
         <option value="Agus Sarkawi">Agus Sarkawi</option>
+        <option value="Budiman">Budiman</option>
       </select>
       <input type="password" id="passwordInput" class="input-field" placeholder="Password...">
       <button class="btn btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
@@ -230,11 +231,20 @@
   const API_URL = 'https://script.google.com/macros/s/AKfycbyELoapc56X_qs6QqJ7RidPwK03KwvRKwNdigq93UP_e5ph0o6eK2kmTl-SETT2esb5/exec';
 
   const SANTRI_LIST = [
-    // Array Data Santri (Sama seperti sumber asli, sengaja disingkat untuk keterbacaan, letakkan daftar asli Anda di sini)
-    "ABDULLAH RASYIQUL AKRAM (7A)", "ABDUROHMAN KHOLIL (7A)", "ABDURROZZAQ (7A)", "ADRIAN FACHRY AS'ARY (7A)", 
-    "ALBY FACHRIE (7A)", "ALIF ZIYAD ZAEN (7A)", "ATHAR RIZKY YUDHISTIRA (7A)", "AUFA AL HAMIDI (7A)", 
-    "BINTANG JULIANT ALFARABI (7A)", "FADHIL NASHIR ALBANI (7A)", "FAIZ ARFAN HAIKAL (7A)", "FAYADH ELFATA (7A)"
-    // ... [Pastikan Anda menyalin array SANTRI_LIST asli secara penuh di bagian ini]
+    "ABDULLAH RASYIQUL AKRAM (7A)", "ABDUROHMAN KHOLIL (7A)", "ABDURROZZAQ (7A)", "ADRIAN FACHRY AS'ARY (7A)", "ALBY FACHRIE (7A)", "ALIF ZIYAD ZAEN (7A)", "ATHAR RIZKY YUDHISTIRA (7A)", "AUFA AL HAMIDI (7A)", "BINTANG JULIANT ALFARABI (7A)", "FADHIL NASHIR ALBANI (7A)", "FAIZ ARFAN HAIKAL (7A)", "FAYADH ELFATA (7A)", "HADZUKI ADITYA RAMADHAN (7A)", "HAFIDS AL GHAZALI (7A)", "HARITS ARKAAN (7A)", "HUSAIN ANAKI (7A)", "LALU IQRA ILYAS (7A)", "M. GHAISAN INDIKA HILMY (7A)", "MU'ADZ (7A)", "MUH. GHAFAR ARIEF SETIOBUDI (7A)", "MUHAMMAD ADIB (7A)", "MUHAMMAD AL FAIZ (7A)", "MUHAMMAD ALFIAN RIZQI (7A)", "MUHAMMAD AQIL (7A)", "MUHAMMAD AQIL ALMAIR RAMADHAN (7A)", "MUHAMMAD NAYAKA HAKAM (7A)", "MUHAMMAD TRISTAN ALIEF PRABOWO (7A)", "MUHAMMAD ZAKY AL HAFIZH FAUZAN (7A)", "NADYANDA MUCHALI AL MAJIID (7A)", "RESKI ARSY NEGARA (7A)", "SULTAN FAIZULLAH ATMIJOYO (7A)", "SYABANIN ALKAUTSAR IRAWAN (7A)", "SYAFIIQ AL-ATSARI (7A)", "UKASYAH ABDURROHMAN (7A)", "UWAIS (7A)", "YUSUF ABDURRAHMAN FANSURI (7A)",
+    "AHMAD KADHAFI BAFADHAL (7B)", "AHMAD QAIS ALHADI (7B)", "AKBAR MUHAMMAD FAISAL (7B)", "ALKA ZAHRAN SYAFIQ (7B)", "ANTO APANSA (7B)", "BISMA ABDILLAH SURA (7B)", "GIOFANDI AHNAF SYATIR (7B)", "IMRAN UMAR ALKATIRI (7B)", "JIKRAN ALFATIH MUDASIR (7B)", "KHANUKH MAHIR BAHASWAN (7B)", "LALU ABDURRAHMAN DZAKI KHAIRI (7B)", "LALU MUHAMMAD ISHAM HAWARI (7B)", "LALU TSAQIB AL MUHALY (7B)", "M. SHAFIQ MUBARAK (7B)", "M. SULTHAN HABIBULLAH (7B)", "M.IBAD FA'IQ ATHAR (7B)", "MIFZAL (7B)", "MUH.FAZRIL ILHAM (7B)", "MUHAMAD OZIL (7B)", "MUHAMMAD AIDIL GIFARI (7B)", "MUHAMMAD AKROM AL-FARUQ (7B)", "MUHAMMAD FAUZAN (7B)", "MUHAMMAD FAWWAZ ARRAYAN (7B)", "MUHAMMAD NABIIL SETIAWAN (7B)", "MUHAMMAD NAUFAL AL KHAIRY (7B)", "NAUFAL AL FAIZ (7B)", "PRANAJA AGHA SAFARAZ (7B)", "RADITYA NAUFAL ABIYYU (7B)", "RASYA MAULANA PRASETYO (7B)", "SAJID (7B)", "SYAFIQ ALBANY MUBARAK (7B)", "VIRZAN AL AZKA (7B)", "WAFI 'ABDULLOH (7B)", "YUSUF GIBRAN RAMADHAN (7B)", "ZAKI SALEH (7B)", "ZUBAIR AL FAYYAD (7B)",
+    "ABBASHY RIZQILLAH JULIANGKARA (7C)", "ABIDULLAH IBRAHIM HANIF (7C)", "ABRISAM FAQIH ABBASY (7C)", "ADHWA ASHAAD KAMIDIA (7C)", "AFKAR HAFIDZUL FAYYAD (7C)", "AHMAD AL GHAZALI (7C)", "AHSAN ABDULLAH (7C)", "ALI ABDULLAH AL BAKRI (7C)", "AMIR MUJAHID (7C)", "ANAS MUTTAQIN (7C)", "BAYU SAFA BUDI OZORA (7C)", "DANIL ZAKY AL HANIF (7C)", "FADHIL JAMAL HIZAM (7C)", "FATHIN ABDULLAH (7C)", "FATIH ARDIANSYAH MALIK (7C)", "HAIRUL AZZAM (7C)", "HAFIZ PRATAMA DINTAHA (7C)", "ISAM AL KHUSYAIRI (7C)", "KEENAN DANIAL ALFAREZEL (7C)", "KHAERUL HADI JAELANI (7C)", "MU'ADZ RIFKI AL BAKRI (7C)", "MUH. SHOLYHIN (7C)", "MUHAMMAD ABDURRAHMAN ABBASYI (7C)", "MUHAMMAD DHAFFA DZAKI PUTRA SANI (7C)", "MUHAMMAD EMIRSYAH SYAWAL (7C)", "MUHAMMAD FADLILLAH (7C)", "MUHAMMAD FAIZI ATHAR AL AYYUBI (7C)", "MUHAMMAD ILYAS (7C)", "MUHAMMAD QOIS FIRDAUS (7C)", "MUHAMMAD RUSYDI THALIB (7C)", "MUHAMMAD YAZID ALI (7C)", "NIZAR (7C)", "PATIH MUHAMMAD (7C)", "ZAIM MUBARAK IBNU RASYID (7C)",
+    "ABDURRAHMAN HALIM (7D)", "ABDURRAHMAN HANIF (7D)", "ABU DAFIF KHOLIS AR-ROTANIYY (7D)", "ADHITYA FATHAN NURRIZKILLAH (7D)", "AHMAD SULTAN NAZHIRUL ASROFI (7D)", "AINAN NEVAN INDRAJAYA (7D)", "ALBY RIEZKY RAMADHAN (7D)", "AMMAR (7D)", "DZAKY MAHESWARA (7D)", "FATHIAN AL AZZAM (7D)", "HAFUZA AGHANDHI ISPARWONO (7D)", "ILHAMY MUHAMMAD WAFI (7D)", "KHAIZURAN AZFARIL HAKIM (7D)", "KHALIL ABDUL JABBAR (7D)", "LALU MUHAMMAD FAWAAZ MUSTHOFA (7D)", "M. DHAFFA GIBRAN ARANTA (7D)", "M. HISYAM AL FATHIR (7D)", "M. SALMAN AZKAMIL (7D)", "M. AUFAR TRI IRZANI (7D)", "M. GIYAS AUFA (7D)", "MUHAMMAD AFIIF AL-HABSYI (7D)", "MUHAMMAD AHSAN ZAKI (7D)", "MUHAMMAD ALVIN FAIZ (7D)", "MUHAMMAD FALIH KASYFUL ISLAM (7D)", "MUHAMMAD FAQIH RIZQULLAH (7D)", "MUHAMMAD HAYYAN (7D)", "MUHAMMAD RAIHAN AL FATIH (7D)", "MUZAKKAR HALIM KHAIRI (7D)", "RAZA ARDYLAN AMIR (7D)", "SAMI (7D)", "SAMIR JAZLAN AL- HADI (7D)", "SULTAN MUHAMMAD ALFATI (7D)", "TIHAMI ABDUL MUZANNI A (7D)", "UBAIDURRAHMAN (7D)", "UMAR AL FARUQ (7D)",
+    "ABDURRAHMAN DIANUL GIBRAN (7E)", "ABIE ALFAYAD (7E)", "AHMAD DHANIS ALFARUQ (7E)", "AHMAD ZOFRAN JIHADI (7E)", "AHMAD ZUBAIR (7E)", "AZKA RAHARDHIAN ACHMAD (7E)", "AZKA ZAHRAN SYAFIQ (7E)", "DAFFA IBNU HAFIDZ (7E)", "DANIAL FARUQ ABDURROHMAN (7E)", "FARDAN FADLI (7E)", "FARUQ NABIL ARFADANA (7E)", "FATIR KAHFI RUMI (7E)", "HANIF ABDURRAHMAN (7E)", "HUSEIN ALI FARIS (7E)", "KHAIRIL INSANI RAMADHAN (7E)", "LALU APTA PAWANA SUPRON (7E)", "MUHAMAD ZIZFAN YADI MULIA (7E)", "MUHAMMAD ALGHAZALI SALMIN (7E)", "MUHAMMAD AMMAR (7E)", "MUHAMMAD ATAYA EL AZZAM (7E)", "MUHAMMAD BILAL HARYANTO (7E)", "MUHAMMAD FATHIIN RAMADHANI (7E)", "MUHAMMAD GALIH AS SAKHA (7E)", "MUHAMMAD KENZIE MAHIRA (7E)", "MUHAMMAD NAUFAL GHANI (7E)", "MUHAMMAD YUZARSIF (7E)", "MUHAMMAD ZAID ISA (7E)", "NIRHAM SAJIDAN (7E)", "RADEN ALI FIRAS RAHMATULLAH (7E)", "RAMBU RAYA RABBANI (7E)", "RIZKY RAMADHAN (7E)", "TARAGA PAMENGAS PIRATA (7E)", "THUFAIL ALBYAKSA DEBERNADI (7E)", "UMAR (7E)", "ZIYAN HAFIZURRAHMAN (7E)",
+    "ABDULLAH AZZAM AL MANAR (8a)", "ABDURRAHMAN AL FAYADH (8a)", "ABDURRAHMAN FAQIH ALBANY (8a)", "ABIL MAJDI (8a)", "ALIEF HAFEES DINATA (8a)", "ARIF ALFIAN (8a)", "AZKA SURYA LOGIKA (8a)", "AZMI SUHAIL HIDAYAT (8a)", "AZZAM FAISHAL (8a)", "DEDEN HARDIANTO (8a)", "DINAN HADYAN HANIF (8a)", "HANIF ALTHAF RAMADHANI (8a)", "ILYAS AL-HAKIM (8a)", "ISA FEHER BAGIS (8a)", "LALU DANISH MIRZA AL FATIH MARTADINATA (8a)", "LALU IYAS ALI AHMAD (8a)", "M. DETHA ALGHIFARY (8a)", "M. FATONI (8a)", "MUHAMMAD AL AFIIF MAULANA (8a)", "MUHAMMAD ALBIMAWY (8a)", "MUHAMMAD ALFA AL HAWARI (8a)", "MUHAMMAD BILAL (8a)", "MUHAMMAD DHORFAN FUADY (8a)", "MUHAMMAD IRSYAD HAFIDZ (8a)", "MUHAMMAD IZWAR RASYID (8a)", "MUHAMMAD LUTHFI APRIAN NABHAN (8a)", "MUHAMMAD NIZZAM KHARISMA (8a)", "MUHAMMAD SULTAN (8a)", "MUHAMMAD ZHAFIR ATZANY (8a)", "MUSTAGFIRI ASROR (8a)", "NABHAN KHALIL (8a)", "NIZAM (8a)", "TAMIM ABDILLAH (8a)", "THORIQ SALAM (8a)", "UMAIR AL JUNDI (8a)", "YAZID AWAD SEWET (8a)",
+    "ABBAS (8b)", "ABDUL AZIZULHAKIM (8b)", "ABDURRAHMAN KHADAFI (8b)", "ABDURROHMAN AR-ROSYAD WARDOYO (8b)", "AHMAD MUSAYYIB (8b)", "AHMAD NUBLI ALFATIH (8b)", "AZHALLAH ZAYAN AGHLA (8b)", "DHANIZAM AZ ZIKRI KASYAFANI AHMAD (8b)", "FIRAS FAWAZ FATIH (8b)", "FURQAN ALFATIR (8b)", "HISYAM RIZKI HIDAYAT (8b)", "KHALID ATTAURIQ (8b)", "KHAN KARTAWIJAYA MADANI (8b)", "MUHAMAD ILHAM BINTANG (8b)", "MUHAMAD REZKY AFKHAR (8b)", "MUHAMMAD AL FATIH (8b)", "MUHAMMAD AZAM FARZANA (8b)", "MUHAMMAD AZMI (8b)", "MUHAMMAD DINZA ALKHALIFI (8b)", "MUHAMMAD FACHRI EL FIRAZ (8b)", "MUHAMMAD FADHIL (8b)", "MUHAMMAD FARHAN FURQON (8b)", "MUHAMMAD FATHIN RIDWAN (8b)", "MUHAMMAD HAMIZ JAFAR (8b)", "MUHAMMAD IBNU FARIS (8b)", "MUHAMMAD RAYHAN RAFASYA AL ZHAFRAN (8b)", "MUHAMMAD SALEH (8b)", "NALA FAUZAN ADZIMA (8b)", "NARARYA AZKA RAMADHAN (8b)", "NIDZAM QOSIM (8b)", "SHALLBAR MALIK JABBAR ISMAIL (8b)", "SYAHIDURRAHMAN (8b)", "TYAZQIRO ALIF SURYADIN (8b)", "UNAIS HANIF BUDIMAN (8b)", "YAZID ABDURRAHMAN (8b)", "ZAIM OZIL SYAHMI (8b)",
+    "ABDURRAHMAN AL-FURQON (8c)", "AHDA SYAKIRUL AFKAR (8c)", "AINUL RIZKY (8c)", "ALI FAHREZA RAMADHAN (8c)", "AUFAR BILAL SYAFIQ (8c)", "BARIQ ABDUL AFIF (8c)", "DANARHADIYYA AGRI (8c)", "EMHA RAYYAN HAIKAL AL HAKIM (8c)", "FIRDAUSI NUZULA (8c)", "FITRAH KAMULA TALIANG (8c)", "HAQQY HAYAZA (8c)", "HASAN USMAN SEWET (8c)", "KHAIRUL MIZAN (8c)", "KINAN SAMAU'AL RAHMAN (8c)", "MUHAMMAD ABBAD (8c)", "MUHAMMAD ALVITO ATHARIZ BAYNUKHO (8c)", "MUHAMMAD ARFA AL FAWWAZI (8c)", "MUHAMMAD DIFA ELRAFIF (8c)", "MUHAMMAD FADHIL (8c)", "MUHAMMAD FAID ADLIHAQ (8c)", "MUHAMMAD HAFIDZ (8c)", "MUHAMMAD ILHAM BADRUSSALAM (8c)", "MUHAMMAD KHALIFA GHAISANI (8c)", "MUHAMMAD SALMAN AL FARISI (8c)", "MUSYARI ROSYID (8c)", "NAUFAL ADINURRAHMAN (8c)", "NAYIF ALQADRI (8c)", "QUSAY (8c)", "RASHA MUHAMMAD ATHAYA (8c)", "SALEM OSAMA MA'DAN (8c)", "SALIM ABDULLAH GUNAWAN (8c)", "SYAHMI ZABIR (8c)", "SYAKIR (8c)", "UWAYS ABDURRAHMAN (8c)", "WIFA ASYROFI (8c)",
+    "ALFATH BHUMI ARSAKHA (8d)", "ARSHALAN MUHAMMAD FERALVO (8d)", "ATAN ALFATIH TOSAMAN (8d)", "ATMADEVA HAYUMERTA (8d)", "AUFA IMADUDDIN (8d)", "BUMI ABDI NEGARA (8d)", "DZAKWAN TSAMIR ARRAHMAN (8d)", "FATHIR AKMAL RABBANI (8d)", "FATHIR ALI AL HUSSEINI (8d)", "FAWWAZ BADRUTAMAM (8d)", "FAYAD FADILAH FAIRUZ AMANULLAH (8d)", "HANIF HAWARI (8d)", "KHALID ALHUDRI (8d)", "LALU AKHTAR TSAQIF GUNAWAN (8d)", "LALU AZZAM ABDURRAASYID ROMADHONI (8d)", "LALU MUHAMMAD ZEVIAN ALTHAF (8d)", "M APRIANSYAH (8d)", "M. DZAKWAN KHAFADY (8d)", "M. SAYYID RAZIQ AL FATIH (8d)", "MAULANA KHALIL ACHMAD (8d)", "MUHAMAD RIZKY KATSIRO (8d)", "MUHAMMAD AFLAH KHALAF KASMAN (8d)", "MUHAMMAD FARID AZFAR (8d)", "MUHAMMAD HABIB ASLAM (8d)", "MUHAMMAD LUKMAN ALFAIQ (8d)", "MUHAMMAD NAYYIF (8d)", "MUHAMMAD RAIHAN PUTRA FIRMANDA (8d)", "MUHAMMAD RIZKI ANUGRAH (8d)", "MUHAMMAD RIZKY ALHAKIM (8d)", "MUHAMMAD SYAFIQ ARKAN (8d)", "MUHAMMAD SYAHRIZA RIVAI (8d)", "NIKO SATYA ATMAJA (8d)", "RIDHO MARTA DINATA (8d)", "YUSUF KAMIL (8d)", "ZAID UBAIDILLAH (8d)",
+    "ABDURRAHMAN AHMAD (8e)", "ABDURRAHMAN ZAYID (8e)", "ADITYA PUTRA WIDANI (8e)", "ADZKA INSANUL ARIF (8e)", "AMMAR ABDURRAZZAQ (8e)", "ANUGERAH RAZA KHASYI (8e)", "ATFAL RAMADHAN (8e)", "ATHIF (8e)", "AYMAN SULTAN AYUBI (8e)", "BILAL (8e)", "DEKA SAMUDERA (8e)", "FATHI AIMAN EL HARIS (8e)", "FATHIR DZAKWAN RAMADHAN (8e)", "FATIH EL ROZZA (8e)", "FI ZHILALIT TAUHID (8e)", "FURQON AZKA IBRAHIM (8e)", "IBNU NABIL MANULLANG (8e)", "JA'FAR ABDUL HALIM (8e)", "KAFKA APUILA (8e)", "LALU BASRI RAHMAN (8e)", "LALU SANDY AL FARISI (8e)", "M. ALI SAPUTRA HIDAYAT (8e)", "M. ALIF SIDIK (8e)", "M. RIZKY FANRI ADHA (8e)", "MOCHAMMAD RAYSHA OEMAR (8e)", "MUH.UWAIS AL QORNI (8e)", "MUHAMMAD ARSYAD AL BUKHORI (8e)", "MUHAMMAD FATHIH (8e)", "MUHAMMAD GHOFIQI ARRAYYAN (8e)", "MUHAMMAD RAFIE IBRAHIM (8e)", "MUHAMMAD UWAIS AL QORNY (8e)", "MUHAMMAD ZIBAN (8e)", "MUHAMMAD ZIDAN ALI AKBAR (8e)", "NAUFAL RIZKY ADZ-DZAKY (8e)", "NAVILA AL KAUSAR (8e)",
+    "ABDILLAH FAWAZ ADZZIKRY (9a)", "AHMAD ALIFADWAN DZAKIRMANSYAH (9a)", "AHZA IMTIAS (9a)", "ALTAIR FATIH MUHAMMAD (9a)", "AMIRUL SHOLEH (9a)", "ASLAM AROFI (9a)", "BAGAS ERVITO (9a)", "FARIS RAFIE AS'ARY (9a)", "FAYYADH IFAT ASSYARIF (9a)", "GHAISAN HARISANDY (9a)", "IYADH IBNU MUNAWAR (9a)", "KHAIRIL FAHMI HUDA (9a)", "L. FERDIANSYAH AMMAR AL-FATIH (9a)", "LALU EZRA RAFEE AL RASYID (9a)", "M. FADHIL ZAHRAN (9a)", "M. FIKRI AZHARI (9a)", "M. NAYAKA ABHIYANTA AL FAYYADH (9a)", "M. ZIYAN HALIM (9a)", "MOH. ZAKY FIRMANSYAH (9a)", "MUHAMMAD (9a)", "MUHAMMAD AHLAM DZULFADLI (9a)", "MUHAMMAD ARKHA IBRA SURYA (9a)", "MUHAMMAD BAGAS PRATAMA (9a)", "MUHAMMAD FATHIN (9a)", "MUHAMMAD ZAHY IZDIHAR SYARIEF (9a)", "MUHAMMAD ZHAFRAN ARKAN (9a)", "TEGUH LINGGA AZHARI (9a)", "UMAIR (9a)", "ZENITH ZETTA RINJANI (9a)",
+    "ABDULLAH FAWWAZ SALIM (9b)", "ABDURAHIM ZHORIF (9b)", "AFFAN EL RAFIF (9b)", "AHMAD ABAS (9b)", "ARIF RAHMAN (9b)", "DIHYAH AFNAN (9b)", "FATHIR MUBARAK BIN TAHIR (9b)", "HAIKAL KAMAL (9b)", "HUDZAIFAH AL GHAZWAN (9b)", "HUMAINI HANDREANANTO (9b)", "HUSAIN ABDURACHMAN SEWET (9b)", "IZAS MUHAMAD ALFATIH (9b)", "JIYAD MUNTASHIR (9b)", "M. FAHARIL (9b)", "M. RAYHAN AS-SYAWAL (9b)", "M. ZIYADFAIZAN ALFIJMI (9b)", "MOH AMIN ALKHOLIDIN (9b)", "MU'AFA KHOIR MIDROR (9b)", "MUHAMMAD ALFARIDZZY (9b)", "MUHAMMAD ALTAF (9b)", "MUHAMMAD FADIL AL FARISI (9b)", "MUHAMMAD ISA (9b)", "MUHAMMAD YUSUF MIRZA HIDAYATULLAH (9b)", "MUHAMMAD ZIAN ABDULLAH (9b)", "NADHIF SYAIKUL ISLAM (9b)", "NAUFAL FAUZI (9b)", "RAZZAN ABIYYU ASSABIL (9b)", "RIFQY HANIF MAULANA (9b)", "RIJAL AYMAN HASAN (9b)", "SALEH FATHY BOBSAID (9b)", "SYAMIL YASSIR BALBEID (9b)", "THORIQ MOHAMAD ZIYAD (9b)", "YAZID ACHMAD SYAFIQ BAGIS (9b)",
+    "ADZKA RAFA AL FATIH (9c)", "AFFAN KHATIBUL UMAM (9c)", "AHMAD FAWWAZ AFIFI (9c)", "AYYUB (9c)", "AZFARI AL BUKHARI (9c)", "DANIAL AZZAM ADYATMA (9c)", "FAHIM ABDULLOH (9c)", "FAHRI ZAFRAN KHAIRI (9c)", "FAIRUZ ALMA DZAKI (9c)", "FARZAN ALMER SHAKY (9c)", "FATHIR SAYYAF HAJID (9c)", "FAWWAZ SYAMIL GHIFARI (9c)", "HANIF RAZIN ATHALLAH (9c)", "IKHWAN ZHAFRAN ARIYANTONO (9c)", "ILYAS HELMI HIZAM (9c)", "ILYAS MUJAHID AKBAR (9c)", "JAVA RAJENDRA AL WAFI (9c)", "LALU MUHAMMAD YAZID MAULANA (9c)", "MUHAMAD RHEZA DWI PUTRA (9c)", "MUHAMMAD DAFFA AR RAYYAN (9c)", "MUHAMMAD FARRAS ALIMUDDIN (9c)", "MUHAMMAD JALILUDIN AL HAFIDZ (9c)", "MUHAMMAD MUSA (9c)", "MUHAMMAD RIFAL FADLAN (9c)", "MUHAMMAD RIFQI AKBAR (9c)", "MUHAMMAD YAFI' 'AMMAR Y. (9c)", "MUHAMMAD ZAIN (9c)", "MUJAHIDIN (9c)", "MUSH'AB RIFKI AL BAKRI (9c)", "SABIQ ELFATTAN KURNIAWAN (9c)", "UWAIS BIN LUTHFIE ABDAT (9c)", "YAZID ABDUL QODIR (9c)", "ZIYAN FAKHRI (9c)",
+    "ABDULLAH HIDAYAT (9d)", "ABDULLAH SYAMIL HAIDAR (9d)", "AGUNG RIZKY PRASOJO (9d)", "AHMAD RAFIQ (9d)", "AKHTAR NIZAM BUKHARI (9d)", "ALBY FACHRI (9d)", "ALIF SYAFIQ IBRAHIM (9d)", "ALIIF RASYID MUZHAFFAR (9d)", "ARVIN NAOVAL SARIP (9d)", "AUFAR AZKA SHIDDIQ (9d)", "DAVI CHANDRA ELMESSIA (9d)", "DAYYAN ALHANIF HARYONO (9d)", "DEFRAN AIMAR BAFADAL (9d)", "ELANG PUTRA AMRULLAH (9d)", "GALIH MAHER ABDULLAH (9d)", "GHUDZAMIR NURHAN HAJIRI (9d)", "LALU MAHARAYA SAKHA SUADAYA (9d)", "MOHAMAD ATHAA ASQOLANIY (9d)", "MUH. HILMI (9d)", "MUHAMAD HILMI FAIQ TAUFIK (9d)", "MUHAMMAD AL FATIH RAHMAN (9d)", "MUHAMMAD JIHADUL ISLAM (9d)", "MUHAMMAD NAWWAF AL MUSTAWI (9d)", "MUHAMMAD YUSUF BALWE'EL (9d)", "NUR ADAM AL-KHALIDY (9d)", "RAAFA ASYURO (9d)", "SAYYID ABDILLAH HANIF (9d)", "SUDAIS GHIZLAN GHIFARRY (9d)", "SYAFIIQ ABDULLAH AL BAKRI (9d)", "UQBAH UBAIDILLAH KAUTSAR (9d)", "USAID (9d)", "YUSUF MUSTAFA (9d)"
   ];
 
   let currentUser = null;
@@ -246,13 +256,24 @@
   const countSantri = document.getElementById('countSantri');
   const countWali = document.getElementById('countWali');
 
+  const adminUsers = ['Agus Sarkawi', 'Budiman'];
+
   function authenticate(username, password) {
     if (!username) return false;
+    
+    // Admin khusus Budiman
+    if (username === 'Budiman') {
+      return password === 'budiman212';
+    }
+
     const days = ['ahad', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
     const todayName = days[new Date().getDay()]; 
+    
     if (username === 'Agus Sarkawi') {
       return password.toLowerCase() === ('bismillah' + todayName).toLowerCase();
     }
+    
+    // Format password user standar
     return password.toLowerCase() === (todayName + '212').toLowerCase();
   }
 
@@ -264,10 +285,11 @@
     if (authenticate(user, pass)) {
       currentUser = user;
       document.getElementById('loginStatus').innerHTML = `<i class="fas fa-check-circle"></i> Logged in: ${user}`;
-      document.getElementById('btnShowWali').style.display = 'inline-flex'; // Munculkan tombol aman
+      document.getElementById('btnShowWali').style.display = 'inline-flex';
       
       alert(`Assalamu'alaikum Ustadz ${user}!`);
-      if (user === 'Agus Sarkawi') {
+      
+      if (adminUsers.includes(user)) {
         document.getElementById('adminPanel').style.display = 'block';
         renderChart();
         renderTopSantriAnalysis();
@@ -308,7 +330,7 @@
         localStorage.setItem('cached_records', JSON.stringify(records));
         updateDash();
         updateNetworkStatus(true);
-        if (currentUser === 'Agus Sarkawi') {
+        if (adminUsers.includes(currentUser)) {
            renderChart();
            renderTopSantriAnalysis();
         }
@@ -596,12 +618,12 @@
       head: [['No', 'Nama Santri', 'Kelas', 'Total Telat']],
       body: tableData,
     });
-    doc.save(`Laporan_Admin_Sarkawi.pdf`);
+    doc.save(`Laporan_Admin.pdf`);
   }
 
-  // Render Grafik dengan Sumbu Y berupa Angka Absolut (Jumlah), bukan Persentase
+  // Render Grafik (Sudah diperbaiki dengan format tanggal d-m-yyyy)
   function renderChart() {
-    if (currentUser !== 'Agus Sarkawi') return;
+    if (!adminUsers.includes(currentUser)) return;
     const ctx = document.getElementById('tardyChart').getContext('2d');
     const filter = document.getElementById('chartFilter').value;
     
@@ -609,18 +631,46 @@
     let grouped = {};
     
     santriRecords.forEach(r => {
-      let key = r['Tanggal'] || r.tanggal || 'N/A'; 
+      let rawDate = r['Tanggal'] || r.tanggal || 'N/A'; 
+      let key = 'N/A';
+
+      if (rawDate !== 'N/A') {
+        // Coba parsing tanggal dan atur format d-m-yyyy secara kuat
+        let d = new Date(rawDate);
+        if (!isNaN(d.getTime())) {
+            key = `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
+        } else {
+            // Jika raw date bukan format yang didukung browser standar (misal DD/MM/YYYY)
+            key = rawDate.replace(/\//g, '-').split(' ')[0];
+        }
+      }
+
+      // Format per Bulan (m-yyyy)
       if (filter === 'bulan' && key !== 'N/A') {
-        const parts = key.split('/');
-        if (parts.length === 3) key = `${parts[1]}/${parts[2]}`;
-      } 
+        const parts = key.split('-');
+        if (parts.length >= 3) key = `${parts[1]}-${parts[2]}`;
+      }
+      
       if (!grouped[key]) grouped[key] = 0;
       grouped[key]++;
     });
 
-    const labels = Object.keys(grouped).sort();
+    // Urutkan sumbu X berdasarkan urutan waktu sebenarnya (Kronologis)
+    const labels = Object.keys(grouped).sort((a, b) => {
+        if (a === 'N/A') return -1;
+        if (b === 'N/A') return 1;
+        
+        let parseDate = (str) => {
+            let p = str.split('-'); 
+            // format d-m-yyyy -> [0]:d, [1]:m, [2]:y
+            if (p.length === 3) return new Date(p[2], p[1]-1, p[0]);
+            // format m-yyyy -> [0]:m, [1]:y
+            if (p.length === 2) return new Date(p[1], p[0]-1, 1);
+            return new Date(0);
+        };
+        return parseDate(a) - parseDate(b);
+    });
     
-    // Perbaikan: Mengambil nilai jumlah absolut, BUKAN persentase dibagi total populasi
     const dataSet = labels.map(l => grouped[l]); 
 
     if (chartInstance) chartInstance.destroy();
@@ -657,13 +707,11 @@
     });
   }
 
-  // Analisis Top 5 Santri Sering Terlambat
   function renderTopSantriAnalysis() {
-    if (currentUser !== 'Agus Sarkawi') return;
+    if (!adminUsers.includes(currentUser)) return;
     const analysisContainer = document.getElementById('topSantriAnalysis');
     const groupedData = getSummaryGrouped('santri');
     
-    // Urutkan berdasarkan total telat tertinggi
     const topSantri = groupedData.sort((a, b) => b["Total Telat"] - a["Total Telat"]).slice(0, 5);
     
     let html = '<h4 style="color:var(--danger); font-weight:700; font-size:15px; margin-bottom:15px; display:flex; align-items:center; gap:8px;"><i class="fas fa-chart-bar"></i> Top 5 Santri Sering Telat</h4>';
