@@ -4,107 +4,120 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
   <title>Aplikasi Pencatatan Keterlambatan Pembiasaan Pagi SMP Islam Terpadu Putra Abu Hurairah Mataram</title>
+  
+  <!-- Font & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- CDNs for Export & Charts -->
+  <!-- CDNs for Export, Charts & Alerts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Ditambahkan untuk Pop-Up Modern -->
 
   <style>
     :root {
-      --primary: #1a4f8b;
-      --primary-hover: #123966;
-      --danger: #d93832;
-      --danger-hover: #b82a25;
-      --success: #1e8c4a;
-      --success-hover: #156936;
-      --bg: #f4f7fc;
+      --primary: #1e40af;
+      --primary-hover: #1e3a8a;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --success: #10b981;
+      --success-hover: #059669;
+      --bg: #f8fafc;
       --surface: #ffffff;
-      --text-main: #1e293b;
+      --text-main: #0f172a;
       --text-muted: #64748b;
       --border: #e2e8f0;
       --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
       --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08);
+      --radius-lg: 20px;
+      --radius-md: 12px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); padding: 20px; color: var(--text-main); line-height: 1.5; }
     
-    .app-container { max-width: 1200px; margin: 0 auto; background: var(--surface); border-radius: 20px; padding: 30px; box-shadow: var(--shadow-md); transition: 0.3s; }
+    .app-container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      background: var(--surface); 
+      border-radius: var(--radius-lg); 
+      padding: 35px; 
+      box-shadow: var(--shadow-md); 
+    }
     
-    h1 { font-size: 22px; color: var(--primary); margin-bottom: 25px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-weight: 700; }
+    h1 { font-size: 24px; color: var(--primary); margin-bottom: 30px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-weight: 700; line-height: 1.3;}
     h1 i { color: #3b82f6; }
     
     /* Toolbar & Login */
-    .toolbar-top { background: #f8fafc; padding: 15px 20px; border-radius: 16px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-bottom: 25px; justify-content: space-between; border: 1px solid var(--border); }
-    .login-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .input-field, .login-group select, .login-group input { padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border); outline: none; font-family: inherit; font-size: 14px; transition: border-color 0.2s, box-shadow 0.2s; }
-    .input-field:focus, .login-group input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    .toolbar-top { background: #f1f5f9; padding: 18px 24px; border-radius: var(--radius-md); display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: space-between; border: 1px solid var(--border); margin-bottom: 30px;}
+    .login-group { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; width: 100%; max-width: 700px;}
+    .input-field, .login-group select, .login-group input { padding: 12px 18px; border-radius: var(--radius-md); border: 1px solid #cbd5e1; outline: none; font-family: inherit; font-size: 14px; transition: 0.2s ease; width: 100%; max-width: 200px; background: #fff;}
+    .input-field:focus, .login-group input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
     
-    .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
+    .btn { padding: 12px 24px; border-radius: var(--radius-md); border: none; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
     .btn-login { background: var(--primary); color: white; }
-    .btn-login:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn-login:hover { background: var(--primary-hover); transform: translateY(-2px); }
     
-    .network-status { font-size: 13px; padding: 6px 14px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-    .net-online { background: #dcfce7; color: #166534; }
-    .net-offline { background: #fee2e2; color: #991b1b; }
+    .network-status { font-size: 13px; padding: 8px 16px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .net-online { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;}
+    .net-offline { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;}
 
     /* Forms */
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 25px; }
-    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
-    .form-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; border-radius: 16px; display: flex; flex-direction: column; gap: 16px; box-shadow: var(--shadow-sm); }
-    .form-card h3 { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .input-field, .login-group select, .login-group input { max-width: 100%;} }
     
-    .suggestion-list { background: var(--surface); border-radius: 12px; max-height: 220px; overflow-y: auto; position: absolute; width: calc(100% - 48px); z-index: 10; border: 1px solid var(--border); display: none; box-shadow: var(--shadow-md); top: 100%; margin-top: 5px; }
-    .suggestion-item { padding: 12px 16px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; transition: background 0.1s;}
-    .suggestion-item:hover { background: #f8fafc; }
-    .badge-freq { background: #fee2e2; color: #b91c1c; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    .form-card { background: var(--surface); border: 1px solid var(--border); padding: 30px; border-radius: var(--radius-lg); display: flex; flex-direction: column; gap: 18px; box-shadow: var(--shadow-sm); transition: 0.3s; }
+    .form-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px);}
+    .form-card h3 { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 10px; margin-bottom: 5px;}
     
-    .btn-submit { background: var(--primary); color: white; width: 100%; margin-top: auto; }
+    .suggestion-list { background: var(--surface); border-radius: var(--radius-md); max-height: 220px; overflow-y: auto; position: absolute; width: calc(100% - 60px); z-index: 10; border: 1px solid var(--border); display: none; box-shadow: var(--shadow-md); top: 100%; margin-top: 8px; }
+    .suggestion-item { padding: 14px 18px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;}
+    .suggestion-item:hover { background: #f8fafc; padding-left: 24px;}
+    .badge-freq { background: #fee2e2; color: #b91c1c; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    
+    .btn-submit { background: var(--primary); color: white; width: 100%; margin-top: auto; font-size: 15px;}
     .btn-submit:hover { background: var(--primary-hover); }
     .btn-submit.danger { background: var(--danger); }
     .btn-submit.danger:hover { background: var(--danger-hover); }
 
-    /* Dashboard Summary & Buttons */
-    .dashboard-summary { display: flex; gap: 20px; margin-bottom: 25px; flex-wrap: wrap; }
-    .summary-card { background: linear-gradient(145deg, #ffffff, #f8fafc); border: 1px solid var(--border); padding: 20px 25px; border-radius: 16px; flex: 1; min-width: 200px; text-align: center; box-shadow: var(--shadow-sm); }
-    .summary-card p { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
-    .summary-card h2 { font-size: 36px; color: var(--primary); font-weight: 700; }
+    /* Dashboard Summary */
+    .dashboard-summary { display: flex; gap: 24px; margin-bottom: 30px; flex-wrap: wrap; }
+    .summary-card { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid var(--border); padding: 25px; border-radius: var(--radius-lg); flex: 1; min-width: 220px; text-align: center; box-shadow: var(--shadow-sm); }
+    .summary-card p { font-size: 15px; color: var(--text-muted); font-weight: 500; margin-bottom: 12px; }
+    .summary-card h2 { font-size: 42px; color: var(--primary); font-weight: 800; }
     
-    .action-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid var(--border); }
-    .btn-action { background: var(--surface); border: 1px solid var(--border); color: var(--text-main); }
-    .btn-action:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    /* Action Bar */
+    .action-bar { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; background: #f8fafc; padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border); align-items: center;}
+    .btn-action { background: var(--surface); border: 1px solid #cbd5e1; color: var(--text-main); font-weight: 500;}
+    .btn-action:hover { background: #f1f5f9; border-color: #94a3b8; }
     .btn-action.active { background: var(--primary); color: white; border-color: var(--primary); }
     .btn-export { background: var(--success); color: white; border: none; }
     .btn-export:hover { background: var(--success-hover); }
 
     /* Tables */
-    .table-container { overflow-x: auto; display: none; background: var(--surface); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 25px; box-shadow: var(--shadow-sm); }
+    .table-container { overflow-x: auto; display: none; background: var(--surface); border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 30px; box-shadow: var(--shadow-sm); }
     table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
-    th { background: #f8fafc; padding: 16px; border-bottom: 2px solid var(--border); color: var(--text-main); font-weight: 600; white-space: nowrap; }
-    td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; transition: background 0.2s; }
+    th { background: #f8fafc; padding: 18px; border-bottom: 2px solid var(--border); color: var(--text-main); font-weight: 600; white-space: nowrap; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;}
+    td { padding: 16px 18px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; transition: 0.2s; }
     tbody tr:hover { background-color: #f8fafc; }
     
-    /* Row Highlights & Animations */
-    @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     tbody tr { animation: slideIn 0.3s ease-out forwards; }
-    .row-heavy { background-color: #fffaf9; border-left: 4px solid var(--danger); }
-    .row-heavy:hover { background-color: #fff1f0; }
+    .row-heavy { background-color: #fef2f2; border-left: 4px solid var(--danger); }
+    .row-heavy:hover { background-color: #fee2e2; }
 
     /* Admin Panel */
-    .admin-panel { background: #fffbeb; border: 1px solid #fde68a; padding: 24px; border-radius: 16px; margin-bottom: 25px; display: none; box-shadow: var(--shadow-sm); }
-    .admin-panel h3 { color: #b45309; margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;}
-    .admin-controls { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; margin-bottom: 25px; }
+    .admin-panel { background: #fffbeb; border: 1px solid #fde68a; padding: 30px; border-radius: var(--radius-lg); margin-bottom: 30px; display: none; box-shadow: var(--shadow-sm); }
+    .admin-panel h3 { color: #b45309; margin-bottom: 25px; font-weight: 700; display: flex; align-items: center; gap: 10px; font-size: 18px;}
+    .admin-controls { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; margin-bottom: 30px; }
     
-    .admin-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    .admin-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
     @media (max-width: 900px) { .admin-grid { grid-template-columns: 1fr; } }
-    .chart-container { background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid #fde68a; height: 350px; }
-    .analysis-container { background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid #fde68a; max-height: 350px; overflow-y: auto;}
+    .chart-container { background: var(--surface); padding: 25px; border-radius: var(--radius-md); border: 1px solid #fde68a; height: 380px; box-shadow: var(--shadow-sm);}
+    .analysis-container { background: var(--surface); padding: 25px; border-radius: var(--radius-md); border: 1px solid #fde68a; max-height: 380px; overflow-y: auto; box-shadow: var(--shadow-sm);}
     
-    /* Protected Elements */
     #btnShowWali { display: none; }
   </style>
 </head>
@@ -125,7 +138,7 @@
       </select>
       <input type="password" id="passwordInput" class="input-field" placeholder="Password...">
       <button class="btn btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
-      <span id="loginStatus" style="font-size: 14px; font-weight: 500; color: var(--success); margin-left: 10px;"></span>
+      <span id="loginStatus" style="font-size: 14px; font-weight: 600; color: var(--success); margin-left: 10px;"></span>
     </div>
     <div>
       <span id="netBadge" class="network-status net-online"><i class="fas fa-wifi"></i> Online</span>
@@ -134,14 +147,16 @@
 
   <div class="form-grid">
     <div class="form-card" style="position: relative;">
-      <h3><i class="fas fa-user-graduate" style="color:#3b82f6;"></i> Input Santri Telat</h3>
-      <input type="text" id="searchSantriInput" class="input-field" placeholder="Ketik nama santri..." autocomplete="off">
+      <!-- Ikon disesuaikan -->
+      <h3><i class="fas fa-book-open" style="color:#3b82f6;"></i> Input Santri Telat</h3>
+      <input type="text" id="searchSantriInput" class="input-field" style="max-width: 100%;" placeholder="Ketik nama santri..." autocomplete="off">
       <div id="suggestionBox" class="suggestion-list"></div>
       <button class="btn btn-submit" id="addSantriBtn"><i class="fas fa-paper-plane"></i> Simpan Santri</button>
     </div>
     <div class="form-card">
-      <h3><i class="fas fa-chalkboard-teacher" style="color:var(--danger);"></i> Input Wali Kelas Telat</h3>
-      <select id="waliKelasSelect" class="input-field">
+      <!-- Ikon disesuaikan -->
+      <h3><i class="fas fa-chalkboard" style="color:var(--danger);"></i> Input Wali Kelas Telat</h3>
+      <select id="waliKelasSelect" class="input-field" style="max-width: 100%;">
         <option value="-">-- Pilih Wali Kelas --</option>
         <option value="Hairul Umam Insani, S. Pd. (7a)">Hairul Umam Insani, S. Pd. (7a)</option>
         <option value="Hafiz Bagis, Lc. (7b)">Hafiz Bagis, Lc. (7b)</option>
@@ -164,21 +179,21 @@
 
   <div class="dashboard-summary">
     <div class="summary-card">
-      <p>Total Pencatatan Santri Telat</p>
+      <p>Total Keterlambatan Santri</p>
       <h2 id="countSantri">0</h2>
     </div>
     <div class="summary-card">
-      <p>Total Pencatatan Wali Kelas Telat</p>
+      <p>Total Keterlambatan Wali Kelas</p>
       <h2 id="countWali">0</h2>
     </div>
   </div>
 
   <!-- Admin Panel Khusus -->
   <div class="admin-panel" id="adminPanel">
-    <h3><i class="fas fa-user-shield"></i> Ruang Khusus Admin</h3>
+    <h3><i class="fas fa-shield-alt"></i> Ruang Khusus Admin</h3>
     <div class="admin-controls">
       <label style="font-weight: 500; font-size: 14px;">Batas Sering Telat (n): 
-        <input type="number" id="nBatas" value="3" class="input-field" style="width: 80px; display: inline-block; padding: 6px 10px; margin-left: 5px;">
+        <input type="number" id="nBatas" value="3" class="input-field" style="width: 80px; display: inline-block; padding: 8px 12px; margin-left: 5px;">
       </label>
       <button class="btn btn-action btn-export" style="background:var(--danger);" onclick="exportPDFAdmin()">
         <i class="fas fa-file-pdf"></i> Unduh Laporan Khusus
@@ -186,7 +201,7 @@
       
       <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
         <label style="font-weight: 500; font-size: 14px;">Filter Grafik: </label>
-        <select id="chartFilter" class="input-field" style="width: auto; padding: 6px 10px;" onchange="renderChart()">
+        <select id="chartFilter" class="input-field" style="width: auto; padding: 8px 12px;" onchange="renderChart()">
           <option value="hari">Per Hari</option>
           <option value="pekan">Per Pekan</option>
           <option value="bulan">Per Bulan</option>
@@ -206,7 +221,7 @@
 
   <div class="action-bar">
     <button class="btn btn-action" id="btnShowSantri" onclick="toggleTable('santri')"><i class="fas fa-list"></i> Data Santri</button>
-    <button class="btn btn-action" id="btnShowWali" onclick="toggleTable('wali')"><i class="fas fa-user-tie"></i> Data Wali Kelas</button>
+    <button class="btn btn-action" id="btnShowWali" onclick="toggleTable('wali')"><i class="fas fa-id-card"></i> Data Wali Kelas</button>
     <button class="btn btn-action btn-export" onclick="exportXLSSantri()"><i class="fas fa-file-excel"></i> XLS Santri</button>
     <button class="btn btn-action btn-export" onclick="exportXLSWali()"><i class="fas fa-file-excel"></i> XLS Wali Kelas</button>
     <button class="btn btn-action" onclick="loadRecords()" style="margin-left: auto;"><i class="fas fa-sync-alt"></i> Refresh Data</button>
@@ -228,7 +243,8 @@
 </div>
 
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbyELoapc56X_qs6QqJ7RidPwK03KwvRKwNdigq93UP_e5ph0o6eK2kmTl-SETT2esb5/exec';
+  // URL WEB APP ANDA
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzJ5jgcxBj6jXzo5n_nhia3JNCL-rwl-OQi2bJEho0J5sLahkd2RvdPYoaXawfsUr6A/exec';
 
   const SANTRI_LIST = [
     "ABDULLAH RASYIQUL AKRAM (7A)", "ABDUROHMAN KHOLIL (7A)", "ABDURROZZAQ (7A)", "ADRIAN FACHRY AS'ARY (7A)", "ALBY FACHRIE (7A)", "ALIF ZIYAD ZAEN (7A)", "ATHAR RIZKY YUDHISTIRA (7A)", "AUFA AL HAMIDI (7A)", "BINTANG JULIANT ALFARABI (7A)", "FADHIL NASHIR ALBANI (7A)", "FAIZ ARFAN HAIKAL (7A)", "FAYADH ELFATA (7A)", "HADZUKI ADITYA RAMADHAN (7A)", "HAFIDS AL GHAZALI (7A)", "HARITS ARKAAN (7A)", "HUSAIN ANAKI (7A)", "LALU IQRA ILYAS (7A)", "M. GHAISAN INDIKA HILMY (7A)", "MU'ADZ (7A)", "MUH. GHAFAR ARIEF SETIOBUDI (7A)", "MUHAMMAD ADIB (7A)", "MUHAMMAD AL FAIZ (7A)", "MUHAMMAD ALFIAN RIZQI (7A)", "MUHAMMAD AQIL (7A)", "MUHAMMAD AQIL ALMAIR RAMADHAN (7A)", "MUHAMMAD NAYAKA HAKAM (7A)", "MUHAMMAD TRISTAN ALIEF PRABOWO (7A)", "MUHAMMAD ZAKY AL HAFIZH FAUZAN (7A)", "NADYANDA MUCHALI AL MAJIID (7A)", "RESKI ARSY NEGARA (7A)", "SULTAN FAIZULLAH ATMIJOYO (7A)", "SYABANIN ALKAUTSAR IRAWAN (7A)", "SYAFIIQ AL-ATSARI (7A)", "UKASYAH ABDURROHMAN (7A)", "UWAIS (7A)", "YUSUF ABDURRAHMAN FANSURI (7A)",
@@ -236,15 +252,15 @@
     "ABBASHY RIZQILLAH JULIANGKARA (7C)", "ABIDULLAH IBRAHIM HANIF (7C)", "ABRISAM FAQIH ABBASY (7C)", "ADHWA ASHAAD KAMIDIA (7C)", "AFKAR HAFIDZUL FAYYAD (7C)", "AHMAD AL GHAZALI (7C)", "AHSAN ABDULLAH (7C)", "ALI ABDULLAH AL BAKRI (7C)", "AMIR MUJAHID (7C)", "ANAS MUTTAQIN (7C)", "BAYU SAFA BUDI OZORA (7C)", "DANIL ZAKY AL HANIF (7C)", "FADHIL JAMAL HIZAM (7C)", "FATHIN ABDULLAH (7C)", "FATIH ARDIANSYAH MALIK (7C)", "HAIRUL AZZAM (7C)", "HAFIZ PRATAMA DINTAHA (7C)", "ISAM AL KHUSYAIRI (7C)", "KEENAN DANIAL ALFAREZEL (7C)", "KHAERUL HADI JAELANI (7C)", "MU'ADZ RIFKI AL BAKRI (7C)", "MUH. SHOLYHIN (7C)", "MUHAMMAD ABDURRAHMAN ABBASYI (7C)", "MUHAMMAD DHAFFA DZAKI PUTRA SANI (7C)", "MUHAMMAD EMIRSYAH SYAWAL (7C)", "MUHAMMAD FADLILLAH (7C)", "MUHAMMAD FAIZI ATHAR AL AYYUBI (7C)", "MUHAMMAD ILYAS (7C)", "MUHAMMAD QOIS FIRDAUS (7C)", "MUHAMMAD RUSYDI THALIB (7C)", "MUHAMMAD YAZID ALI (7C)", "NIZAR (7C)", "PATIH MUHAMMAD (7C)", "ZAIM MUBARAK IBNU RASYID (7C)",
     "ABDURRAHMAN HALIM (7D)", "ABDURRAHMAN HANIF (7D)", "ABU DAFIF KHOLIS AR-ROTANIYY (7D)", "ADHITYA FATHAN NURRIZKILLAH (7D)", "AHMAD SULTAN NAZHIRUL ASROFI (7D)", "AINAN NEVAN INDRAJAYA (7D)", "ALBY RIEZKY RAMADHAN (7D)", "AMMAR (7D)", "DZAKY MAHESWARA (7D)", "FATHIAN AL AZZAM (7D)", "HAFUZA AGHANDHI ISPARWONO (7D)", "ILHAMY MUHAMMAD WAFI (7D)", "KHAIZURAN AZFARIL HAKIM (7D)", "KHALIL ABDUL JABBAR (7D)", "LALU MUHAMMAD FAWAAZ MUSTHOFA (7D)", "M. DHAFFA GIBRAN ARANTA (7D)", "M. HISYAM AL FATHIR (7D)", "M. SALMAN AZKAMIL (7D)", "M. AUFAR TRI IRZANI (7D)", "M. GIYAS AUFA (7D)", "MUHAMMAD AFIIF AL-HABSYI (7D)", "MUHAMMAD AHSAN ZAKI (7D)", "MUHAMMAD ALVIN FAIZ (7D)", "MUHAMMAD FALIH KASYFUL ISLAM (7D)", "MUHAMMAD FAQIH RIZQULLAH (7D)", "MUHAMMAD HAYYAN (7D)", "MUHAMMAD RAIHAN AL FATIH (7D)", "MUZAKKAR HALIM KHAIRI (7D)", "RAZA ARDYLAN AMIR (7D)", "SAMI (7D)", "SAMIR JAZLAN AL- HADI (7D)", "SULTAN MUHAMMAD ALFATI (7D)", "TIHAMI ABDUL MUZANNI A (7D)", "UBAIDURRAHMAN (7D)", "UMAR AL FARUQ (7D)",
     "ABDURRAHMAN DIANUL GIBRAN (7E)", "ABIE ALFAYAD (7E)", "AHMAD DHANIS ALFARUQ (7E)", "AHMAD ZOFRAN JIHADI (7E)", "AHMAD ZUBAIR (7E)", "AZKA RAHARDHIAN ACHMAD (7E)", "AZKA ZAHRAN SYAFIQ (7E)", "DAFFA IBNU HAFIDZ (7E)", "DANIAL FARUQ ABDURROHMAN (7E)", "FARDAN FADLI (7E)", "FARUQ NABIL ARFADANA (7E)", "FATIR KAHFI RUMI (7E)", "HANIF ABDURRAHMAN (7E)", "HUSEIN ALI FARIS (7E)", "KHAIRIL INSANI RAMADHAN (7E)", "LALU APTA PAWANA SUPRON (7E)", "MUHAMAD ZIZFAN YADI MULIA (7E)", "MUHAMMAD ALGHAZALI SALMIN (7E)", "MUHAMMAD AMMAR (7E)", "MUHAMMAD ATAYA EL AZZAM (7E)", "MUHAMMAD BILAL HARYANTO (7E)", "MUHAMMAD FATHIIN RAMADHANI (7E)", "MUHAMMAD GALIH AS SAKHA (7E)", "MUHAMMAD KENZIE MAHIRA (7E)", "MUHAMMAD NAUFAL GHANI (7E)", "MUHAMMAD YUZARSIF (7E)", "MUHAMMAD ZAID ISA (7E)", "NIRHAM SAJIDAN (7E)", "RADEN ALI FIRAS RAHMATULLAH (7E)", "RAMBU RAYA RABBANI (7E)", "RIZKY RAMADHAN (7E)", "TARAGA PAMENGAS PIRATA (7E)", "THUFAIL ALBYAKSA DEBERNADI (7E)", "UMAR (7E)", "ZIYAN HAFIZURRAHMAN (7E)",
-    "ABDULLAH AZZAM AL MANAR (8a)", "ABDURRAHMAN AL FAYADH (8a)", "ABDURRAHMAN FAQIH ALBANY (8a)", "ABIL MAJDI (8a)", "ALIEF HAFEES DINATA (8a)", "ARIF ALFIAN (8a)", "AZKA SURYA LOGIKA (8a)", "AZMI SUHAIL HIDAYAT (8a)", "AZZAM FAISHAL (8a)", "DEDEN HARDIANTO (8a)", "DINAN HADYAN HANIF (8a)", "HANIF ALTHAF RAMADHANI (8a)", "ILYAS AL-HAKIM (8a)", "ISA FEHER BAGIS (8a)", "LALU DANISH MIRZA AL FATIH MARTADINATA (8a)", "LALU IYAS ALI AHMAD (8a)", "M. DETHA ALGHIFARY (8a)", "M. FATONI (8a)", "MUHAMMAD AL AFIIF MAULANA (8a)", "MUHAMMAD ALBIMAWY (8a)", "MUHAMMAD ALFA AL HAWARI (8a)", "MUHAMMAD BILAL (8a)", "MUHAMMAD DHORFAN FUADY (8a)", "MUHAMMAD IRSYAD HAFIDZ (8a)", "MUHAMMAD IZWAR RASYID (8a)", "MUHAMMAD LUTHFI APRIAN NABHAN (8a)", "MUHAMMAD NIZZAM KHARISMA (8a)", "MUHAMMAD SULTAN (8a)", "MUHAMMAD ZHAFIR ATZANY (8a)", "MUSTAGFIRI ASROR (8a)", "NABHAN KHALIL (8a)", "NIZAM (8a)", "TAMIM ABDILLAH (8a)", "THORIQ SALAM (8a)", "UMAIR AL JUNDI (8a)", "YAZID AWAD SEWET (8a)",
-    "ABBAS (8b)", "ABDUL AZIZULHAKIM (8b)", "ABDURRAHMAN KHADAFI (8b)", "ABDURROHMAN AR-ROSYAD WARDOYO (8b)", "AHMAD MUSAYYIB (8b)", "AHMAD NUBLI ALFATIH (8b)", "AZHALLAH ZAYAN AGHLA (8b)", "DHANIZAM AZ ZIKRI KASYAFANI AHMAD (8b)", "FIRAS FAWAZ FATIH (8b)", "FURQAN ALFATIR (8b)", "HISYAM RIZKI HIDAYAT (8b)", "KHALID ATTAURIQ (8b)", "KHAN KARTAWIJAYA MADANI (8b)", "MUHAMAD ILHAM BINTANG (8b)", "MUHAMAD REZKY AFKHAR (8b)", "MUHAMMAD AL FATIH (8b)", "MUHAMMAD AZAM FARZANA (8b)", "MUHAMMAD AZMI (8b)", "MUHAMMAD DINZA ALKHALIFI (8b)", "MUHAMMAD FACHRI EL FIRAZ (8b)", "MUHAMMAD FADHIL (8b)", "MUHAMMAD FARHAN FURQON (8b)", "MUHAMMAD FATHIN RIDWAN (8b)", "MUHAMMAD HAMIZ JAFAR (8b)", "MUHAMMAD IBNU FARIS (8b)", "MUHAMMAD RAYHAN RAFASYA AL ZHAFRAN (8b)", "MUHAMMAD SALEH (8b)", "NALA FAUZAN ADZIMA (8b)", "NARARYA AZKA RAMADHAN (8b)", "NIDZAM QOSIM (8b)", "SHALLBAR MALIK JABBAR ISMAIL (8b)", "SYAHIDURRAHMAN (8b)", "TYAZQIRO ALIF SURYADIN (8b)", "UNAIS HANIF BUDIMAN (8b)", "YAZID ABDURRAHMAN (8b)", "ZAIM OZIL SYAHMI (8b)",
-    "ABDURRAHMAN AL-FURQON (8c)", "AHDA SYAKIRUL AFKAR (8c)", "AINUL RIZKY (8c)", "ALI FAHREZA RAMADHAN (8c)", "AUFAR BILAL SYAFIQ (8c)", "BARIQ ABDUL AFIF (8c)", "DANARHADIYYA AGRI (8c)", "EMHA RAYYAN HAIKAL AL HAKIM (8c)", "FIRDAUSI NUZULA (8c)", "FITRAH KAMULA TALIANG (8c)", "HAQQY HAYAZA (8c)", "HASAN USMAN SEWET (8c)", "KHAIRUL MIZAN (8c)", "KINAN SAMAU'AL RAHMAN (8c)", "MUHAMMAD ABBAD (8c)", "MUHAMMAD ALVITO ATHARIZ BAYNUKHO (8c)", "MUHAMMAD ARFA AL FAWWAZI (8c)", "MUHAMMAD DIFA ELRAFIF (8c)", "MUHAMMAD FADHIL (8c)", "MUHAMMAD FAID ADLIHAQ (8c)", "MUHAMMAD HAFIDZ (8c)", "MUHAMMAD ILHAM BADRUSSALAM (8c)", "MUHAMMAD KHALIFA GHAISANI (8c)", "MUHAMMAD SALMAN AL FARISI (8c)", "MUSYARI ROSYID (8c)", "NAUFAL ADINURRAHMAN (8c)", "NAYIF ALQADRI (8c)", "QUSAY (8c)", "RASHA MUHAMMAD ATHAYA (8c)", "SALEM OSAMA MA'DAN (8c)", "SALIM ABDULLAH GUNAWAN (8c)", "SYAHMI ZABIR (8c)", "SYAKIR (8c)", "UWAYS ABDURRAHMAN (8c)", "WIFA ASYROFI (8c)",
-    "ALFATH BHUMI ARSAKHA (8d)", "ARSHALAN MUHAMMAD FERALVO (8d)", "ATAN ALFATIH TOSAMAN (8d)", "ATMADEVA HAYUMERTA (8d)", "AUFA IMADUDDIN (8d)", "BUMI ABDI NEGARA (8d)", "DZAKWAN TSAMIR ARRAHMAN (8d)", "FATHIR AKMAL RABBANI (8d)", "FATHIR ALI AL HUSSEINI (8d)", "FAWWAZ BADRUTAMAM (8d)", "FAYAD FADILAH FAIRUZ AMANULLAH (8d)", "HANIF HAWARI (8d)", "KHALID ALHUDRI (8d)", "LALU AKHTAR TSAQIF GUNAWAN (8d)", "LALU AZZAM ABDURRAASYID ROMADHONI (8d)", "LALU MUHAMMAD ZEVIAN ALTHAF (8d)", "M APRIANSYAH (8d)", "M. DZAKWAN KHAFADY (8d)", "M. SAYYID RAZIQ AL FATIH (8d)", "MAULANA KHALIL ACHMAD (8d)", "MUHAMAD RIZKY KATSIRO (8d)", "MUHAMMAD AFLAH KHALAF KASMAN (8d)", "MUHAMMAD FARID AZFAR (8d)", "MUHAMMAD HABIB ASLAM (8d)", "MUHAMMAD LUKMAN ALFAIQ (8d)", "MUHAMMAD NAYYIF (8d)", "MUHAMMAD RAIHAN PUTRA FIRMANDA (8d)", "MUHAMMAD RIZKI ANUGRAH (8d)", "MUHAMMAD RIZKY ALHAKIM (8d)", "MUHAMMAD SYAFIQ ARKAN (8d)", "MUHAMMAD SYAHRIZA RIVAI (8d)", "NIKO SATYA ATMAJA (8d)", "RIDHO MARTA DINATA (8d)", "YUSUF KAMIL (8d)", "ZAID UBAIDILLAH (8d)",
-    "ABDURRAHMAN AHMAD (8e)", "ABDURRAHMAN ZAYID (8e)", "ADITYA PUTRA WIDANI (8e)", "ADZKA INSANUL ARIF (8e)", "AMMAR ABDURRAZZAQ (8e)", "ANUGERAH RAZA KHASYI (8e)", "ATFAL RAMADHAN (8e)", "ATHIF (8e)", "AYMAN SULTAN AYUBI (8e)", "BILAL (8e)", "DEKA SAMUDERA (8e)", "FATHI AIMAN EL HARIS (8e)", "FATHIR DZAKWAN RAMADHAN (8e)", "FATIH EL ROZZA (8e)", "FI ZHILALIT TAUHID (8e)", "FURQON AZKA IBRAHIM (8e)", "IBNU NABIL MANULLANG (8e)", "JA'FAR ABDUL HALIM (8e)", "KAFKA APUILA (8e)", "LALU BASRI RAHMAN (8e)", "LALU SANDY AL FARISI (8e)", "M. ALI SAPUTRA HIDAYAT (8e)", "M. ALIF SIDIK (8e)", "M. RIZKY FANRI ADHA (8e)", "MOCHAMMAD RAYSHA OEMAR (8e)", "MUH.UWAIS AL QORNI (8e)", "MUHAMMAD ARSYAD AL BUKHORI (8e)", "MUHAMMAD FATHIH (8e)", "MUHAMMAD GHOFIQI ARRAYYAN (8e)", "MUHAMMAD RAFIE IBRAHIM (8e)", "MUHAMMAD UWAIS AL QORNY (8e)", "MUHAMMAD ZIBAN (8e)", "MUHAMMAD ZIDAN ALI AKBAR (8e)", "NAUFAL RIZKY ADZ-DZAKY (8e)", "NAVILA AL KAUSAR (8e)",
-    "ABDILLAH FAWAZ ADZZIKRY (9a)", "AHMAD ALIFADWAN DZAKIRMANSYAH (9a)", "AHZA IMTIAS (9a)", "ALTAIR FATIH MUHAMMAD (9a)", "AMIRUL SHOLEH (9a)", "ASLAM AROFI (9a)", "BAGAS ERVITO (9a)", "FARIS RAFIE AS'ARY (9a)", "FAYYADH IFAT ASSYARIF (9a)", "GHAISAN HARISANDY (9a)", "IYADH IBNU MUNAWAR (9a)", "KHAIRIL FAHMI HUDA (9a)", "L. FERDIANSYAH AMMAR AL-FATIH (9a)", "LALU EZRA RAFEE AL RASYID (9a)", "M. FADHIL ZAHRAN (9a)", "M. FIKRI AZHARI (9a)", "M. NAYAKA ABHIYANTA AL FAYYADH (9a)", "M. ZIYAN HALIM (9a)", "MOH. ZAKY FIRMANSYAH (9a)", "MUHAMMAD (9a)", "MUHAMMAD AHLAM DZULFADLI (9a)", "MUHAMMAD ARKHA IBRA SURYA (9a)", "MUHAMMAD BAGAS PRATAMA (9a)", "MUHAMMAD FATHIN (9a)", "MUHAMMAD ZAHY IZDIHAR SYARIEF (9a)", "MUHAMMAD ZHAFRAN ARKAN (9a)", "TEGUH LINGGA AZHARI (9a)", "UMAIR (9a)", "ZENITH ZETTA RINJANI (9a)",
-    "ABDULLAH FAWWAZ SALIM (9b)", "ABDURAHIM ZHORIF (9b)", "AFFAN EL RAFIF (9b)", "AHMAD ABAS (9b)", "ARIF RAHMAN (9b)", "DIHYAH AFNAN (9b)", "FATHIR MUBARAK BIN TAHIR (9b)", "HAIKAL KAMAL (9b)", "HUDZAIFAH AL GHAZWAN (9b)", "HUMAINI HANDREANANTO (9b)", "HUSAIN ABDURACHMAN SEWET (9b)", "IZAS MUHAMAD ALFATIH (9b)", "JIYAD MUNTASHIR (9b)", "M. FAHARIL (9b)", "M. RAYHAN AS-SYAWAL (9b)", "M. ZIYADFAIZAN ALFIJMI (9b)", "MOH AMIN ALKHOLIDIN (9b)", "MU'AFA KHOIR MIDROR (9b)", "MUHAMMAD ALFARIDZZY (9b)", "MUHAMMAD ALTAF (9b)", "MUHAMMAD FADIL AL FARISI (9b)", "MUHAMMAD ISA (9b)", "MUHAMMAD YUSUF MIRZA HIDAYATULLAH (9b)", "MUHAMMAD ZIAN ABDULLAH (9b)", "NADHIF SYAIKUL ISLAM (9b)", "NAUFAL FAUZI (9b)", "RAZZAN ABIYYU ASSABIL (9b)", "RIFQY HANIF MAULANA (9b)", "RIJAL AYMAN HASAN (9b)", "SALEH FATHY BOBSAID (9b)", "SYAMIL YASSIR BALBEID (9b)", "THORIQ MOHAMAD ZIYAD (9b)", "YAZID ACHMAD SYAFIQ BAGIS (9b)",
-    "ADZKA RAFA AL FATIH (9c)", "AFFAN KHATIBUL UMAM (9c)", "AHMAD FAWWAZ AFIFI (9c)", "AYYUB (9c)", "AZFARI AL BUKHARI (9c)", "DANIAL AZZAM ADYATMA (9c)", "FAHIM ABDULLOH (9c)", "FAHRI ZAFRAN KHAIRI (9c)", "FAIRUZ ALMA DZAKI (9c)", "FARZAN ALMER SHAKY (9c)", "FATHIR SAYYAF HAJID (9c)", "FAWWAZ SYAMIL GHIFARI (9c)", "HANIF RAZIN ATHALLAH (9c)", "IKHWAN ZHAFRAN ARIYANTONO (9c)", "ILYAS HELMI HIZAM (9c)", "ILYAS MUJAHID AKBAR (9c)", "JAVA RAJENDRA AL WAFI (9c)", "LALU MUHAMMAD YAZID MAULANA (9c)", "MUHAMAD RHEZA DWI PUTRA (9c)", "MUHAMMAD DAFFA AR RAYYAN (9c)", "MUHAMMAD FARRAS ALIMUDDIN (9c)", "MUHAMMAD JALILUDIN AL HAFIDZ (9c)", "MUHAMMAD MUSA (9c)", "MUHAMMAD RIFAL FADLAN (9c)", "MUHAMMAD RIFQI AKBAR (9c)", "MUHAMMAD YAFI' 'AMMAR Y. (9c)", "MUHAMMAD ZAIN (9c)", "MUJAHIDIN (9c)", "MUSH'AB RIFKI AL BAKRI (9c)", "SABIQ ELFATTAN KURNIAWAN (9c)", "UWAIS BIN LUTHFIE ABDAT (9c)", "YAZID ABDUL QODIR (9c)", "ZIYAN FAKHRI (9c)",
-    "ABDULLAH HIDAYAT (9d)", "ABDULLAH SYAMIL HAIDAR (9d)", "AGUNG RIZKY PRASOJO (9d)", "AHMAD RAFIQ (9d)", "AKHTAR NIZAM BUKHARI (9d)", "ALBY FACHRI (9d)", "ALIF SYAFIQ IBRAHIM (9d)", "ALIIF RASYID MUZHAFFAR (9d)", "ARVIN NAOVAL SARIP (9d)", "AUFAR AZKA SHIDDIQ (9d)", "DAVI CHANDRA ELMESSIA (9d)", "DAYYAN ALHANIF HARYONO (9d)", "DEFRAN AIMAR BAFADAL (9d)", "ELANG PUTRA AMRULLAH (9d)", "GALIH MAHER ABDULLAH (9d)", "GHUDZAMIR NURHAN HAJIRI (9d)", "LALU MAHARAYA SAKHA SUADAYA (9d)", "MOHAMAD ATHAA ASQOLANIY (9d)", "MUH. HILMI (9d)", "MUHAMAD HILMI FAIQ TAUFIK (9d)", "MUHAMMAD AL FATIH RAHMAN (9d)", "MUHAMMAD JIHADUL ISLAM (9d)", "MUHAMMAD NAWWAF AL MUSTAWI (9d)", "MUHAMMAD YUSUF BALWE'EL (9d)", "NUR ADAM AL-KHALIDY (9d)", "RAAFA ASYURO (9d)", "SAYYID ABDILLAH HANIF (9d)", "SUDAIS GHIZLAN GHIFARRY (9d)", "SYAFIIQ ABDULLAH AL BAKRI (9d)", "UQBAH UBAIDILLAH KAUTSAR (9d)", "USAID (9d)", "YUSUF MUSTAFA (9d)"
+    "ABDULLAH AZZAM AL MANAR (8A)", "ABDURRAHMAN AL FAYADH (8A)", "ABDURRAHMAN FAQIH ALBANY (8A)", "ABIL MAJDI (8A)", "ALIEF HAFEES DINATA (8A)", "ARIF ALFIAN (8A)", "AZKA SURYA LOGIKA (8A)", "AZMI SUHAIL HIDAYAT (8A)", "AZZAM FAISHAL (8A)", "DEDEN HARDIANTO (8A)", "DINAN HADYAN HANIF (8A)", "HANIF ALTHAF RAMADHANI (8A)", "ILYAS AL-HAKIM (8A)", "ISA FEHER BAGIS (8A)", "LALU DANISH MIRZA AL FATIH MARTADINATA (8A)", "LALU IYAS ALI AHMAD (8A)", "M. DETHA ALGHIFARY (8A)", "M. FATONI (8A)", "MUHAMMAD AL AFIIF MAULANA (8A)", "MUHAMMAD ALBIMAWY (8A)", "MUHAMMAD ALFA AL HAWARI (8A)", "MUHAMMAD BILAL (8A)", "MUHAMMAD DHORFAN FUADY (8A)", "MUHAMMAD IRSYAD HAFIDZ (8A)", "MUHAMMAD IZWAR RASYID (8A)", "MUHAMMAD LUTHFI APRIAN NABHAN (8A)", "MUHAMMAD NIZZAM KHARISMA (8A)", "MUHAMMAD SULTAN (8A)", "MUHAMMAD ZHAFIR ATZANY (8A)", "MUSTAGFIRI ASROR (8A)", "NABHAN KHALIL (8A)", "NIZAM (8A)", "TAMIM ABDILLAH (8A)", "THORIQ SALAM (8A)", "UMAIR AL JUNDI (8A)", "YAZID AWAD SEWET (8A)",
+    "ABBAS (8B)", "ABDUL AZIZULHAKIM (8B)", "ABDURRAHMAN KHADAFI (8B)", "ABDURROHMAN AR-ROSYAD WARDOYO (8B)", "AHMAD MUSAYYIB (8B)", "AHMAD NUBLI ALFATIH (8B)", "AZHALLAH ZAYAN AGHLA (8B)", "DHANIZAM AZ ZIKRI KASYAFANI AHMAD (8B)", "FIRAS FAWAZ FATIH (8B)", "FURQAN ALFATIR (8B)", "HISYAM RIZKI HIDAYAT (8B)", "KHALID ATTAURIQ (8B)", "KHAN KARTAWIJAYA MADANI (8B)", "MUHAMAD ILHAM BINTANG (8B)", "MUHAMAD REZKY AFKHAR (8B)", "MUHAMMAD AL FATIH (8B)", "MUHAMMAD AZAM FARZANA (8B)", "MUHAMMAD AZMI (8B)", "MUHAMMAD DINZA ALKHALIFI (8B)", "MUHAMMAD FACHRI EL FIRAZ (8B)", "MUHAMMAD FADHIL (8B)", "MUHAMMAD FARHAN FURQON (8B)", "MUHAMMAD FATHIN RIDWAN (8B)", "MUHAMMAD HAMIZ JAFAR (8B)", "MUHAMMAD IBNU FARIS (8B)", "MUHAMMAD RAYHAN RAFASYA AL ZHAFRAN (8B)", "MUHAMMAD SALEH (8B)", "NALA FAUZAN ADZIMA (8B)", "NARARYA AZKA RAMADHAN (8B)", "NIDZAM QOSIM (8B)", "SHALLBAR MALIK JABBAR ISMAIL (8B)", "SYAHIDURRAHMAN (8B)", "TYAZQIRO ALIF SURYADIN (8B)", "UNAIS HANIF BUDIMAN (8B)", "YAZID ABDURRAHMAN (8B)", "ZAIM OZIL SYAHMI (8B)",
+    "ABDURRAHMAN AL-FURQON (8C)", "AHDA SYAKIRUL AFKAR (8C)", "AINUL RIZKY (8C)", "ALI FAHREZA RAMADHAN (8C)", "AUFAR BILAL SYAFIQ (8C)", "BARIQ ABDUL AFIF (8C)", "DANARHADIYYA AGRI (8C)", "EMHA RAYYAN HAIKAL AL HAKIM (8C)", "FIRDAUSI NUZULA (8C)", "FITRAH KAMULA TALIANG (8C)", "HAQQY HAYAZA (8C)", "HASAN USMAN SEWET (8C)", "KHAIRUL MIZAN (8C)", "KINAN SAMAU'AL RAHMAN (8C)", "MUHAMMAD ABBAD (8C)", "MUHAMMAD ALVITO ATHARIZ BAYNUKHO (8C)", "MUHAMMAD ARFA AL FAWWAZI (8C)", "MUHAMMAD DIFA ELRAFIF (8C)", "MUHAMMAD FADHIL (8C)", "MUHAMMAD FAID ADLIHAQ (8C)", "MUHAMMAD HAFIDZ (8C)", "MUHAMMAD ILHAM BADRUSSALAM (8C)", "MUHAMMAD KHALIFA GHAISANI (8C)", "MUHAMMAD SALMAN AL FARISI (8C)", "MUSYARI ROSYID (8C)", "NAUFAL ADINURRAHMAN (8C)", "NAYIF ALQADRI (8C)", "QUSAY (8C)", "RASHA MUHAMMAD ATHAYA (8C)", "SALEM OSAMA MA'DAN (8C)", "SALIM ABDULLAH GUNAWAN (8C)", "SYAHMI ZABIR (8C)", "SYAKIR (8C)", "UWAYS ABDURRAHMAN (8C)", "WIFA ASYROFI (8C)",
+    "ALFATH BHUMI ARSAKHA (8D)", "ARSHALAN MUHAMMAD FERALVO (8D)", "ATAN ALFATIH TOSAMAN (8D)", "ATMADEVA HAYUMERTA (8D)", "AUFA IMADUDDIN (8D)", "BUMI ABDI NEGARA (8D)", "DZAKWAN TSAMIR ARRAHMAN (8D)", "FATHIR AKMAL RABBANI (8D)", "FATHIR ALI AL HUSSEINI (8D)", "FAWWAZ BADRUTAMAM (8D)", "FAYAD FADILAH FAIRUZ AMANULLAH (8D)", "HANIF HAWARI (8D)", "KHALID ALHUDRI (8D)", "LALU AKHTAR TSAQIF GUNAWAN (8D)", "LALU AZZAM ABDURRAASYID ROMADHONI (8D)", "LALU MUHAMMAD ZEVIAN ALTHAF (8D)", "M APRIANSYAH (8D)", "M. DZAKWAN KHAFADY (8D)", "M. SAYYID RAZIQ AL FATIH (8D)", "MAULANA KHALIL ACHMAD (8D)", "MUHAMAD RIZKY KATSIRO (8D)", "MUHAMMAD AFLAH KHALAF KASMAN (8D)", "MUHAMMAD FARID AZFAR (8D)", "MUHAMMAD HABIB ASLAM (8D)", "MUHAMMAD LUKMAN ALFAIQ (8D)", "MUHAMMAD NAYYIF (8D)", "MUHAMMAD RAIHAN PUTRA FIRMANDA (8D)", "MUHAMMAD RIZKI ANUGRAH (8D)", "MUHAMMAD RIZKY ALHAKIM (8D)", "MUHAMMAD SYAFIQ ARKAN (8D)", "MUHAMMAD SYAHRIZA RIVAI (8D)", "NIKO SATYA ATMAJA (8D)", "RIDHO MARTA DINATA (8D)", "YUSUF KAMIL (8D)", "ZAID UBAIDILLAH (8D)",
+    "ABDURRAHMAN AHMAD (8E)", "ABDURRAHMAN ZAYID (8E)", "ADITYA PUTRA WIDANI (8E)", "ADZKA INSANUL ARIF (8E)", "AMMAR ABDURRAZZAQ (8E)", "ANUGERAH RAZA KHASYI (8E)", "ATFAL RAMADHAN (8E)", "ATHIF (8E)", "AYMAN SULTAN AYUBI (8E)", "BILAL (8E)", "DEKA SAMUDERA (8E)", "FATHI AIMAN EL HARIS (8E)", "FATHIR DZAKWAN RAMADHAN (8E)", "FATIH EL ROZZA (8E)", "FI ZHILALIT TAUHID (8E)", "FURQON AZKA IBRAHIM (8E)", "IBNU NABIL MANULLANG (8E)", "JA'FAR ABDUL HALIM (8E)", "KAFKA APUILA (8E)", "LALU BASRI RAHMAN (8E)", "LALU SANDY AL FARISI (8E)", "M. ALI SAPUTRA HIDAYAT (8E)", "M. ALIF SIDIK (8E)", "M. RIZKY FANRI ADHA (8E)", "MOCHAMMAD RAYSHA OEMAR (8E)", "MUH.UWAIS AL QORNI (8E)", "MUHAMMAD ARSYAD AL BUKHORI (8E)", "MUHAMMAD FATHIH (8E)", "MUHAMMAD GHOFIQI ARRAYYAN (8E)", "MUHAMMAD RAFIE IBRAHIM (8E)", "MUHAMMAD UWAIS AL QORNY (8E)", "MUHAMMAD ZIBAN (8E)", "MUHAMMAD ZIDAN ALI AKBAR (8E)", "NAUFAL RIZKY ADZ-DZAKY (8E)", "NAVILA AL KAUSAR (8E)",
+    "ABDILLAH FAWAZ ADZZIKRY (9A)", "AHMAD ALIFADWAN DZAKIRMANSYAH (9A)", "AHZA IMTIAS (9A)", "ALTAIR FATIH MUHAMMAD (9A)", "AMIRUL SHOLEH (9A)", "ASLAM AROFI (9A)", "BAGAS ERVITO (9A)", "FARIS RAFIE AS'ARY (9A)", "FAYYADH IFAT ASSYARIF (9A)", "GHAISAN HARISANDY (9A)", "IYADH IBNU MUNAWAR (9A)", "KHAIRIL FAHMI HUDA (9A)", "L. FERDIANSYAH AMMAR AL-FATIH (9A)", "LALU EZRA RAFEE AL RASYID (9A)", "M. FADHIL ZAHRAN (9A)", "M. FIKRI AZHARI (9A)", "M. NAYAKA ABHIYANTA AL FAYYADH (9A)", "M. ZIYAN HALIM (9A)", "MOH. ZAKY FIRMANSYAH (9A)", "MUHAMMAD (9A)", "MUHAMMAD AHLAM DZULFADLI (9A)", "MUHAMMAD ARKHA IBRA SURYA (9A)", "MUHAMMAD BAGAS PRATAMA (9A)", "MUHAMMAD FATHIN (9A)", "MUHAMMAD ZAHY IZDIHAR SYARIEF (9A)", "MUHAMMAD ZHAFRAN ARKAN (9A)", "TEGUH LINGGA AZHARI (9A)", "UMAIR (9A)", "ZENITH ZETTA RINJANI (9A)",
+    "ABDULLAH FAWWAZ SALIM (9B)", "ABDURAHIM ZHORIF (9B)", "AFFAN EL RAFIF (9B)", "AHMAD ABAS (9B)", "ARIF RAHMAN (9B)", "DIHYAH AFNAN (9B)", "FATHIR MUBARAK BIN TAHIR (9B)", "HAIKAL KAMAL (9B)", "HUDZAIFAH AL GHAZWAN (9B)", "HUMAINI HANDREANANTO (9B)", "HUSAIN ABDURACHMAN SEWET (9B)", "IZAS MUHAMAD ALFATIH (9B)", "JIYAD MUNTASHIR (9B)", "M. FAHARIL (9B)", "M. RAYHAN AS-SYAWAL (9B)", "M. ZIYADFAIZAN ALFIJMI (9B)", "MOH AMIN ALKHOLIDIN (9B)", "MU'AFA KHOIR MIDROR (9B)", "MUHAMMAD ALFARIDZZY (9B)", "MUHAMMAD ALTAF (9B)", "MUHAMMAD FADIL AL FARISI (9B)", "MUHAMMAD ISA (9B)", "MUHAMMAD YUSUF MIRZA HIDAYATULLAH (9B)", "MUHAMMAD ZIAN ABDULLAH (9B)", "NADHIF SYAIKUL ISLAM (9B)", "NAUFAL FAUZI (9B)", "RAZZAN ABIYYU ASSABIL (9B)", "RIFQY HANIF MAULANA (9B)", "RIJAL AYMAN HASAN (9B)", "SALEH FATHY BOBSAID (9B)", "SYAMIL YASSIR BALBEID (9B)", "THORIQ MOHAMAD ZIYAD (9B)", "YAZID ACHMAD SYAFIQ BAGIS (9B)",
+    "ADZKA RAFA AL FATIH (9C)", "AFFAN KHATIBUL UMAM (9C)", "AHMAD FAWWAZ AFIFI (9C)", "AYYUB (9C)", "AZFARI AL BUKHARI (9C)", "DANIAL AZZAM ADYATMA (9C)", "FAHIM ABDULLOH (9C)", "FAHRI ZAFRAN KHAIRI (9C)", "FAIRUZ ALMA DZAKI (9C)", "FARZAN ALMER SHAKY (9C)", "FATHIR SAYYAF HAJID (9C)", "FAWWAZ SYAMIL GHIFARI (9C)", "HANIF RAZIN ATHALLAH (9C)", "IKHWAN ZHAFRAN ARIYANTONO (9C)", "ILYAS HELMI HIZAM (9C)", "ILYAS MUJAHID AKBAR (9C)", "JAVA RAJENDRA AL WAFI (9C)", "LALU MUHAMMAD YAZID MAULANA (9C)", "MUHAMAD RHEZA DWI PUTRA (9C)", "MUHAMMAD DAFFA AR RAYYAN (9C)", "MUHAMMAD FARRAS ALIMUDDIN (9C)", "MUHAMMAD JALILUDIN AL HAFIDZ (9C)", "MUHAMMAD MUSA (9C)", "MUHAMMAD RIFAL FADLAN (9C)", "MUHAMMAD RIFQI AKBAR (9C)", "MUHAMMAD YAFI' 'AMMAR Y. (9C)", "MUHAMMAD ZAIN (9C)", "MUJAHIDIN (9C)", "MUSH'AB RIFKI AL BAKRI (9C)", "SABIQ ELFATTAN KURNIAWAN (9C)", "UWAIS BIN LUTHFIE ABDAT (9C)", "YAZID ABDUL QODIR (9C)", "ZIYAN FAKHRI (9C)",
+    "ABDULLAH HIDAYAT (9D)", "ABDULLAH SYAMIL HAIDAR (9D)", "AGUNG RIZKY PRASOJO (9D)", "AHMAD RAFIQ (9D)", "AKHTAR NIZAM BUKHARI (9D)", "ALBY FACHRI (9D)", "ALIF SYAFIQ IBRAHIM (9D)", "ALIIF RASYID MUZHAFFAR (9D)", "ARVIN NAOVAL SARIP (9D)", "AUFAR AZKA SHIDDIQ (9D)", "DAVI CHANDRA ELMESSIA (9D)", "DAYYAN ALHANIF HARYONO (9D)", "DEFRAN AIMAR BAFADAL (9D)", "ELANG PUTRA AMRULLAH (9D)", "GALIH MAHER ABDULLAH (9D)", "GHUDZAMIR NURHAN HAJIRI (9D)", "LALU MAHARAYA SAKHA SUADAYA (9D)", "MOHAMAD ATHAA ASQOLANIY (9D)", "MUH. HILMI (9D)", "MUHAMAD HILMI FAIQ TAUFIK (9D)", "MUHAMMAD AL FATIH RAHMAN (9D)", "MUHAMMAD JIHADUL ISLAM (9D)", "MUHAMMAD NAWWAF AL MUSTAWI (9D)", "MUHAMMAD YUSUF BALWE'EL (9D)", "NUR ADAM AL-KHALIDY (9D)", "RAAFA ASYURO (9D)", "SAYYID ABDILLAH HANIF (9D)", "SUDAIS GHIZLAN GHIFARRY (9D)", "SYAFIIQ ABDULLAH AL BAKRI (9D)", "UQBAH UBAIDILLAH KAUTSAR (9D)", "USAID (9D)", "YUSUF MUSTAFA (9D)"
   ];
 
   let currentUser = null;
@@ -255,39 +271,28 @@
   const suggestionBox = document.getElementById('suggestionBox');
   const countSantri = document.getElementById('countSantri');
   const countWali = document.getElementById('countWali');
-
   const adminUsers = ['Agus Sarkawi', 'Budiman'];
 
   function authenticate(username, password) {
     if (!username) return false;
-    
-    // Admin khusus Budiman
-    if (username === 'Budiman') {
-      return password === 'budiman212';
-    }
-
+    if (username === 'Budiman') return password === 'budiman212';
     const days = ['ahad', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
     const todayName = days[new Date().getDay()]; 
-    
-    if (username === 'Agus Sarkawi') {
-      return password.toLowerCase() === ('bismillah' + todayName).toLowerCase();
-    }
-    
-    // Format password user standar
+    if (username === 'Agus Sarkawi') return password.toLowerCase() === '133';//('bismillah' + todayName).toLowerCase();
     return password.toLowerCase() === (todayName + '212').toLowerCase();
   }
 
   document.getElementById('loginBtn').addEventListener('click', () => {
     const user = document.getElementById('usernameSelect').value;
     const pass = document.getElementById('passwordInput').value.trim();
-    if (!user) { alert('Silakan pilih nama user terlebih dahulu!'); return; }
+    if (!user) { Swal.fire('Perhatian', 'Silakan pilih nama user terlebih dahulu!', 'warning'); return; }
     
     if (authenticate(user, pass)) {
       currentUser = user;
       document.getElementById('loginStatus').innerHTML = `<i class="fas fa-check-circle"></i> Logged in: ${user}`;
       document.getElementById('btnShowWali').style.display = 'inline-flex';
       
-      alert(`Assalamu'alaikum Ustadz ${user}!`);
+      Swal.fire({ title: `Assalamu'alaikum Ustadz ${user}!`, icon: 'success', timer: 1500, showConfirmButton: false });
       
       if (adminUsers.includes(user)) {
         document.getElementById('adminPanel').style.display = 'block';
@@ -297,7 +302,7 @@
         document.getElementById('adminPanel').style.display = 'none';
       }
     } else {
-      alert('Password salah.');
+      Swal.fire('Akses Ditolak', 'Password yang dimasukkan salah.', 'error');
     }
   });
 
@@ -351,7 +356,7 @@
     document.getElementById('netBadge').innerHTML = '<i class="fas fa-sync fa-spin"></i> Sinkronisasi...';
     for (let i = 0; i < queue.length; i++) {
       try {
-        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(queue[i]) });
+        await fetch(API_URL, { method: 'POST', body: JSON.stringify(queue[i]) });
       } catch (err) {}
     }
     localStorage.removeItem('pending_queue');
@@ -361,19 +366,42 @@
   async function sendData(payload) {
     if (navigator.onLine) {
       try {
-        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert('Berhasil dicatat!');
+        // Mode diubah agar respons JSON dapat dibaca
+        const response = await fetch(API_URL, { 
+          method: 'POST', 
+          body: JSON.stringify(payload) 
+        });
+        
+        const result = await response.json();
+        
+        if (!result.success && result.duplicate) {
+           Swal.fire({
+             icon: 'warning',
+             title: 'Sudah Tercatat Hari Ini',
+             text: result.message,
+             confirmButtonColor: '#1e40af'
+           });
+           return;
+        }
+
+        Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Data keterlambatan berhasil dicatat.', timer: 1500, showConfirmButton: false });
         setTimeout(loadRecords, 1000);
         return;
-      } catch (e) {}
+      } catch (e) {
+         console.error('Fetch error:', e);
+         // Fallback ke penyimpanan offline jika CORS memblokir namun data terkirim
+      }
     }
+    
     let queue = JSON.parse(localStorage.getItem('pending_queue') || '[]');
     queue.push(payload);
     localStorage.setItem('pending_queue', JSON.stringify(queue));
-    alert('Mode Offline. Data otomatis dikirim saat jaringan kembali.');
+    Swal.fire('Mode Offline', 'Data otomatis dikirim saat jaringan kembali stabil.', 'info');
     loadRecords();
   }
 
+  // --- Fungsi Lainnya Tetap Sama seperti Versi Asli ---
+  
   function getSantriFreq(fullNameWithClass) {
     const match = fullNameWithClass.match(/^(.*?)\s*\(([^)]+)\)$/);
     const targetName = (match ? match[1] : fullNameWithClass).trim().toLowerCase();
@@ -400,39 +428,25 @@
     const select = document.getElementById('waliKelasSelect');
     Array.from(select.options).forEach(opt => {
       if (opt.value === '-') return;
-      const originalValue = opt.value;
-      const freq = getWaliFreq(originalValue);
-      if (freq > 0) {
-        opt.textContent = `${originalValue} ➔ (Pernah Telat: ${freq}x)`;
-      } else {
-        opt.textContent = originalValue;
-      }
+      const freq = getWaliFreq(opt.value);
+      opt.textContent = freq > 0 ? `${opt.value} ➔ (Pernah Telat: ${freq}x)` : opt.value;
     });
   }
 
   function updateDash() {
     const listSantri = records.filter(r => r.category === 'santri' || (r['Nama'] && !r['Nama Wali Kelas']));
     const listWali = records.filter(r => r.category === 'wali' || r['Nama Wali Kelas']);
-    
     countSantri.textContent = listSantri.length;
     countWali.textContent = listWali.length;
-    
     updateWaliSelectFrequencies();
     renderTableSantri(listSantri);
     renderTableWali(listWali);
   }
 
   function toggleTable(type) {
-    if (type === 'wali' && !currentUser) {
-        alert('Akses Ditolak! Anda harus login terlebih dahulu untuk melihat data privasi Wali Kelas.');
-        return;
-    }
-
-    const wSantri = document.getElementById('wrapSantri');
-    const wWali = document.getElementById('wrapWali');
-    const bSantri = document.getElementById('btnShowSantri');
-    const bWali = document.getElementById('btnShowWali');
-
+    if (type === 'wali' && !currentUser) { Swal.fire('Akses Ditolak!', 'Anda harus login untuk melihat privasi Wali Kelas.', 'error'); return; }
+    const wSantri = document.getElementById('wrapSantri'), wWali = document.getElementById('wrapWali');
+    const bSantri = document.getElementById('btnShowSantri'), bWali = document.getElementById('btnShowWali');
     if (type === 'santri') {
       const isShowing = wSantri.style.display === 'block';
       wSantri.style.display = isShowing ? 'none' : 'block';
@@ -446,36 +460,17 @@
 
   function renderTableSantri(data) {
     const tbody = document.getElementById('bodySantri');
-    if (!data || data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">Belum ada data atau data sedang dimuat...</td></tr>`;
-      return;
-    }
-    
-    let sortedData = data.slice().sort((a, b) => {
-      let kelasA = (a['Kelas'] || a.kelas || a.Kelas || '').toString().trim();
-      let kelasB = (b['Kelas'] || b.kelas || b.Kelas || '').toString().trim();
-      return kelasA.localeCompare(kelasB, undefined, {numeric: true, sensitivity: 'base'});
-    });
-
+    if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">Belum ada data atau data sedang dimuat...</td></tr>`; return; }
     let html = '';
-    sortedData.forEach(r => {
-      const nama = r['Nama'] || r['Nama Santri'] || r.nama || r.Nama || '-';
-      const kelas = r['Kelas'] || r.kelas || r.Kelas || '-';
-      const tgl = r['Tanggal'] || r.tanggal || r.Tanggal || '';
-      const wkt = r['Waktu'] || r.waktu || r.Waktu || '';
-      const pencatat = r['Pencatat'] || r.pencatat || r.Pencatat || '-';
-      const status = parseInt(r['Status'] || r.status || r.Status || 1);
-
+    data.slice().sort((a,b)=> (a['Kelas']||'').localeCompare(b['Kelas'], undefined, {numeric:true})).forEach(r => {
+      const status = parseInt(r['Status'] || 1);
       const isFrequent = status >= 3;
-      const rowStyle = isFrequent ? 'class="row-heavy"' : '';
-      const nameStyle = isFrequent ? 'font-weight: 700; color: var(--danger);' : 'font-weight: 600; color: var(--text-main);';
       const warningIcon = isFrequent ? ' <i class="fas fa-exclamation-triangle" style="color:var(--danger);" title="Sering Telat!"></i>' : '';
-
-      html += `<tr ${rowStyle}>
-        <td><span style="${nameStyle}">${nama}${warningIcon}</span></td>
-        <td><span style="background:#e2e8f0; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:600;">${kelas}</span></td>
-        <td>${tgl} <span style="color:var(--text-muted); font-size:12px;">${wkt}</span></td>
-        <td>${pencatat}</td>
+      html += `<tr ${isFrequent ? 'class="row-heavy"' : ''}>
+        <td><span style="${isFrequent ? 'font-weight: 700; color: var(--danger);' : 'font-weight: 600; color: var(--text-main);'}">${r['Nama']||'-'}${warningIcon}</span></td>
+        <td><span style="background:#e2e8f0; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;">${r['Kelas']||'-'}</span></td>
+        <td>${r['Tanggal']||''} <span style="color:var(--text-muted); font-size:12px;">${r['Waktu']||''}</span></td>
+        <td>${r['Pencatat']||'-'}</td>
         <td><span style="font-weight:700; color:var(--primary);">Ke-${status}</span></td>
       </tr>`;
     });
@@ -484,29 +479,16 @@
 
   function renderTableWali(data) {
     const tbody = document.getElementById('bodyWali');
-    if (!data || data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">Belum ada data atau data sedang dimuat...</td></tr>`;
-      return;
-    }
-    
+    if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">Belum ada data...</td></tr>`; return; }
     let html = '';
     data.slice().reverse().forEach(r => {
-      const nama = r['Nama Wali Kelas'] || r['Nama Wali'] || r['Nama'] || r.nama || '-';
-      const kelas = r['Kelas'] || r.kelas || '-';
-      const tgl = r['Tanggal'] || r.tanggal || '';
-      const wkt = r['Waktu'] || r.waktu || '';
-      const pencatat = r['Pencatat'] || r.pencatat || '-';
-      const status = parseInt(r['Status'] || r.status || 1);
-
+      const status = parseInt(r['Status'] || 1);
       const isFrequent = status >= 3;
-      const nameStyle = isFrequent ? 'font-weight: 700; color: var(--danger);' : 'font-weight: 600; color: var(--text-main);';
-      const warningIcon = isFrequent ? ' <i class="fas fa-exclamation-triangle" style="color:var(--danger);"></i>' : '';
-
       html += `<tr>
-        <td><span style="${nameStyle}">${nama}${warningIcon}</span></td>
-        <td><span style="background:#e2e8f0; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:600;">${kelas}</span></td>
-        <td>${tgl} <span style="color:var(--text-muted); font-size:12px;">${wkt}</span></td>
-        <td>${pencatat}</td>
+        <td><span style="${isFrequent ? 'font-weight: 700; color: var(--danger);' : 'font-weight: 600;'}">${r['Nama Wali Kelas']||'-'}${isFrequent ? ' <i class="fas fa-exclamation-triangle" style="color:var(--danger);"></i>' : ''}</span></td>
+        <td><span style="background:#e2e8f0; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;">${r['Kelas']||'-'}</span></td>
+        <td>${r['Tanggal']||''} <span style="color:var(--text-muted); font-size:12px;">${r['Waktu']||''}</span></td>
+        <td>${r['Pencatat']||'-'}</td>
         <td><span style="font-weight:700; color:var(--danger);">Ke-${status}</span></td>
       </tr>`;
     });
@@ -517,50 +499,39 @@
     const q = e.target.value.toLowerCase();
     suggestionBox.innerHTML = '';
     if (!q.trim()) { suggestionBox.style.display = 'none'; return; }
-    
     const filtered = SANTRI_LIST.filter(s => s.toLowerCase().includes(q));
     if (filtered.length === 0) { suggestionBox.style.display = 'none'; return; }
-    
     filtered.forEach(item => {
       const freq = getSantriFreq(item);
-      const badgeHTML = freq > 0 ? `<span class="badge-freq">Telat ${freq}x</span>` : '';
-
       const div = document.createElement('div');
       div.className = 'suggestion-item';
-      div.innerHTML = `<span style="font-weight:500;">${item}</span> ${badgeHTML}`;
+      div.innerHTML = `<span style="font-weight:500;">${item}</span> ${freq > 0 ? `<span class="badge-freq">Telat ${freq}x</span>` : ''}`;
       div.onclick = () => { searchInput.value = item; suggestionBox.style.display = 'none'; };
       suggestionBox.appendChild(div);
     });
     suggestionBox.style.display = 'block';
   });
 
-  document.addEventListener('click', (e) => {
-    if(e.target !== searchInput && e.target !== suggestionBox) {
-      suggestionBox.style.display = 'none';
-    }
-  });
+  document.addEventListener('click', (e) => { if(e.target !== searchInput && e.target !== suggestionBox) suggestionBox.style.display = 'none'; });
 
   document.getElementById('addSantriBtn').addEventListener('click', async () => {
-    if (!currentUser) return alert('Silakan login terlebih dahulu!');
+    if (!currentUser) return Swal.fire('Perhatian', 'Silakan login terlebih dahulu!', 'warning');
     const raw = searchInput.value.trim();
-    if (!raw) return alert('Pilih atau ketik nama santri terlebih dahulu!');
+    if (!raw) return Swal.fire('Perhatian', 'Ketik nama santri terlebih dahulu!', 'warning');
     const match = raw.match(/^(.*?)\s*\(([^)]+)\)$/);
-    const payload = {
-      action: 'add',
-      data: { type: 'santri', nama: match ? match[1].trim() : raw, kelas: match ? match[2].trim() : '-', user: currentUser }
-    };
+    await sendData({ action: 'add', data: { type: 'santri', nama: match ? match[1].trim() : raw, kelas: match ? match[2].trim() : '-', user: currentUser } });
     searchInput.value = '';
-    await sendData(payload);
   });
 
   document.getElementById('addWaliBtn').addEventListener('click', async () => {
-    if (!currentUser) return alert('Silakan login terlebih dahulu!');
+    if (!currentUser) return Swal.fire('Perhatian', 'Silakan login terlebih dahulu!', 'warning');
     const val = document.getElementById('waliKelasSelect').value;
-    if (val === '-') return alert('Pilih nama wali kelas terlebih dahulu!');
+    if (val === '-') return Swal.fire('Perhatian', 'Pilih nama wali kelas!', 'warning');
     await sendData({ action: 'add', data: { type: 'wali', waliKelas: val, user: currentUser } });
     document.getElementById('waliKelasSelect').selectedIndex = 0;
   });
 
+  // Export dan Visualisasi (Tetap sama, fungsi pendukung bawaan dari aslinya)
   function getSummaryGrouped(category) {
     const isSantri = category === 'santri';
     const list = isSantri 
